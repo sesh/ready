@@ -1,0 +1,7 @@
+build
+ready.egg-info
+__pycache__
+.mypy_cache
+out
+many.py
+domains.txt

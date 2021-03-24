@@ -1,0 +1,133 @@
+from ready.result import result
+
+
+def extract_csp(response):
+    if "content-security-policy" in response.headers:
+        return response.headers["content-security-policy"]
+
+    # TODO: Extract from http-equiv meta tag
+    return None
+
+
+def _trunc(s, max_length=200):
+    if not s:
+        return ""
+
+    if len(s) > max_length:
+        return s[:max_length] + "..."
+
+    return s
+
+
+# Check: Content-Security-Policy header should exist
+def check_csp_should_exist(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None,
+        f"Content-Security-Policy header should exist ({_trunc(csp)})",
+        "csp",
+        **kwargs,
+    )
+
+
+# Check: Content-Security-Policy header should start with default-src 'none'
+def check_csp_should_start_with_defaultsrc_none(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and csp.startswith("default-src 'none'"),
+        f"Content-Security-Policy header should start with default-src 'none' ({_trunc(csp)})",
+        "csp_defaultsrc_none",
+        **kwargs,
+    )
+
+
+# Check: Content-Security-Policy header must not include unsafe-inline
+# NOTE: this checks everywhere, not just in script-src
+def check_csp_must_not_include_unsafe_inline(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and "unsafe-inline" not in csp,
+        f"Content-Security-Policy header must not include unsafe-inline ({_trunc(csp)})",
+        "csp_no_unsafe_inline",
+        **kwargs,
+    )
+
+
+# Check: Content-Security-Policy header should include report-uri
+# NOTE: report-uri is being replaced by report-to but browser support is spotty so report-uri should still exist
+def check_csp_should_include_reporturi(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and ("report-uri https://" in csp),
+        f"Content-Security-Policy header should include report-uri ({_trunc(csp)})",
+        "csp_report_uri",
+        **kwargs,
+    )
+
+
+# Check: Content-Security-Policy header should include report-to
+def check_csp_should_include_reportto(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and ("report-to" in csp),
+        f"Content-Security-Policy header should include report-to ({_trunc(csp)})",
+        "csp_report_to",
+        warn_on_fail=True,
+        **kwargs,
+    )
+
+
+# Check: Content-Security-Policy header only includes valid directives
+def check_csp_should_only_include_valid_directives(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    directives = []
+
+    if csp:
+        directives = [x.split()[0] for x in csp.split(";") if x]
+
+    valid_directives = [
+        "base-uri",
+        "block-all-mixed-content",
+        "child-src",
+        "connect-src",
+        "default-src",
+        "font-src",
+        "form-action",
+        "frame-ancestors",
+        "frame-src",
+        "img-src",
+        "manifest-src",
+        "media-src",
+        "navigate-to",
+        "object-src",
+        "plugin-types",
+        "prefetch-src",
+        "report-to",
+        "report-uri",
+        "require-sri-for",
+        "require-trusted-types-for",
+        "sandbox",
+        "script-src-attr",
+        "script-src-elem",
+        "script-src",
+        "style-src-attr",
+        "style-src-elem",
+        "style-src",
+        "trusted-types",
+        "upgrade-insecure-requests",
+        "worker-src",
+    ]
+
+    return result(
+        csp != None and all([x in valid_directives for x in directives]),
+        f"Content-Security-Policy header only includes valid directives ({directives})",
+        "csp_valid_directives",
+        warn_on_fail=False,
+        **kwargs,
+    )
