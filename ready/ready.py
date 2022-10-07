@@ -85,6 +85,8 @@ from ready.checks.well_known import (
 )
 from ready.checks.ns import check_at_least_two_nameservers_configured
 
+from ready.checks.swagger import check_swagger_should_not_return_200
+
 from ready.thttp import request, pretty
 
 
@@ -107,7 +109,7 @@ def response_or_none(url, **kwargs):
         return None
 
 
-def ready(domain, print_headers=False, print_content=False, json_output=False, hide_output=False, extra_args={}):
+def ready(domain, print_headers=False, print_content=False, json_output=False, hide_output=False, fuzz=False, extra_args={}):
     responses = {
         "http_response": response_or_none(f"http://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
         "response": response_or_none(f"https://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
@@ -234,6 +236,9 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             ]
         )
 
+    if fuzz:
+        checks.append(check_swagger_should_not_return_200)
+
     extra_args["print_output"] = not hide_output
 
     results = []
@@ -279,10 +284,11 @@ def parse_args(args):
 def usage():
     print("ready")
     print("")
-    print("Usage: ready.py [--headers] [--content] [--json] [--quiet] [--score] <domain>")
+    print("Usage: ready.py [--headers] [--content] [--json] [--quiet] [--score] [--fuzz] <domain>")
     print("")
     print("  --headers     Output the headers from the HTTPS request made to the domain")
     print("  --content     Output the content from the HTTPS request made to the domain")
+    print("  --fuzz        Include checks that fuzz urls (only run this on your own domain)")
     print("  --json        Provide JSON output")
     print("  --quiet       No text output")
     print("  --score       Print a score out of 100 for this domain")
@@ -310,6 +316,7 @@ def cli():
         print_content=args.get("--content", False),
         json_output=args.get("--json", False),
         hide_output=args.get("--quiet", False),
+        fuzz=args.get("--fuzz", False)
     )
 
     if "--score" in args:
