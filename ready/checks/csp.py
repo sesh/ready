@@ -45,6 +45,17 @@ def check_csp_should_start_with_defaultsrc_none(responses, **kwargs):
 
 # Check: Content-Security-Policy header must not include unsafe-inline
 # NOTE: this checks everywhere, not just in script-src
+def check_csp_must_not_include_unsafe_eval(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and "unsafe-eval" not in csp,
+        f"Content-Security-Policy header must not include unsafe-eval ({_trunc(csp)})",
+        "csp_no_unsafe_inline",
+        **kwargs,
+    )
+
+# Check: Content-Security-Policy header must not include unsafe-eval
 def check_csp_must_not_include_unsafe_inline(responses, **kwargs):
     csp = extract_csp(responses["response"])
 

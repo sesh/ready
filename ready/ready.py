@@ -25,6 +25,7 @@ from ready.checks.csp import (
     check_csp_should_only_include_valid_directives,
     check_csp_should_start_with_defaultsrc_none,
     check_csp_upgrade_insecure_requests,
+    check_csp_must_not_include_unsafe_eval,
 )
 from ready.checks.email import (
     check_dmarc_record_should_exist,
@@ -168,6 +169,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         check_csp_should_exist,
         check_csp_should_start_with_defaultsrc_none,
         check_csp_must_not_include_unsafe_inline,
+        check_csp_must_not_include_unsafe_eval,
         check_csp_upgrade_insecure_requests,
         check_csp_should_include_reporturi,
         check_csp_should_only_include_valid_directives,
