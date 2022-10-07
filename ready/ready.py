@@ -58,6 +58,7 @@ from ready.checks.html import (
     check_x_content_type_options_should_be_nosniff,
     check_x_xss_protection_should_be_set,
     check_x_dns_prefetch_control_is_off,
+    check_cdns_should_not_be_used,
 )
 from ready.checks.leaky_headers import check_should_not_include_leaky_headers
 from ready.checks.report_to import check_report_to_header_should_be_included_in_response
@@ -215,6 +216,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
                 check_html_should_not_use_schemeless_urls,
                 check_html_script_tags_use_sri,
                 check_x_dns_prefetch_control_is_off,
+                check_cdns_should_not_be_used,
             ]
         )
 
@@ -318,7 +320,7 @@ def cli():
         print_content=args.get("--content", False),
         json_output=args.get("--json", False),
         hide_output=args.get("--quiet", False),
-        fuzz=args.get("--fuzz", False)
+        fuzz=args.get("--fuzz", False),
     )
 
     if "--score" in args:

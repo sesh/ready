@@ -144,3 +144,28 @@ def check_x_dns_prefetch_control_is_off(responses, **kwargs):
         "html_x_dns_prefetch",
         **kwargs,
     )
+
+
+# Check: CDNs should not be used for Javascript or CSS assets
+def check_cdns_should_not_be_used(responses, **kwargs):
+    # XXX: This list was compiled by myself from a number of random web sources, if a better maintained list
+    # exists then I would love to replace this
+    cdn_domains = [
+        "cdn.jsdelivr.net",
+        "cdn.statically.io",
+        "bootstrapcdn.com",
+        "cdnjs.cloudflare.com",
+        "sentry-cdn.com",
+        "ajax.googleapis.com",
+        "code.jquery.com",
+        "ajax.aspnetcdn.com",
+    ]
+
+    script_tags = re.findall(b"<script ([^\>]+)", responses["response"].content)
+    link_tags = re.findall(b"<link (.+)>", responses["response"].content)
+
+    for tag in script_tags + link_tags:
+        if any([x in tag.decode() for x in cdn_domains]):
+            return result(False, "CDNs should not be used for Javascript or CSS assets", "html_cdn_usage", **kwargs)
+
+    return result(True, "CDNs should not be used for Javascript or CSS assets", "html_cdn_usage", **kwargs)
