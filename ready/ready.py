@@ -92,7 +92,7 @@ DEFAULT_HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "en-US,en;q=0.5",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0) Gecko/20100101 Firefox/105.0",
 }
 
 
@@ -279,7 +279,7 @@ def parse_args(args):
 def usage():
     print("ready")
     print("")
-    print("Usage: ready.py [--headers] [--json] domain")
+    print("Usage: ready.py [--headers] [--content] [--json] [--quiet] [--score] <domain>")
     print("")
     print("  --headers     Output the headers from the HTTPS request made to the domain")
     print("  --content     Output the content from the HTTPS request made to the domain")
