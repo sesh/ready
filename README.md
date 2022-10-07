@@ -38,6 +38,7 @@ python3 -m ready.ready <domain>
 - Content-Security-Policy header must not include unsafe-inline
 - Content-Security-Policy header should include report-uri
 - Content-Security-Policy header should include report-to
+- Content-Security-Policy header should include upgrade-insecure-requests
 - Content-Security-Policy header only includes valid directives
 - At least two nameservers should be configured
 - Cross-Origin-Resource-Policy should be "same-origin"
@@ -52,6 +53,7 @@ python3 -m ready.ready <domain>
 - SPF TXT record should exist
 - SPF TXT record should contain "-all"
 - SPF DNS record is depreciated and should not exist
+- SPF includes use less than 10 DNS requests
 - DMARC record should exist
 - Expect-CT header is in the response
 - Expect-CT header should include report-uri
