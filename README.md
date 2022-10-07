@@ -78,4 +78,3 @@ Some things are best left to other tools, or are generally handled in other ways
 - Dependency scanning. Use a service to regularly check that you are using the latest version of your dependencies.
 - Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
 - Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
-
