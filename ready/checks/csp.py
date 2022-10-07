@@ -55,6 +55,7 @@ def check_csp_must_not_include_unsafe_eval(responses, **kwargs):
         **kwargs,
     )
 
+
 # Check: Content-Security-Policy header must not include unsafe-eval
 def check_csp_must_not_include_unsafe_inline(responses, **kwargs):
     csp = extract_csp(responses["response"])

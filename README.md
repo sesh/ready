@@ -9,10 +9,10 @@ python3 -m ready.ready <domain>
 
 
 ## Checklist
-
 - Cookies should set the SameSite flag
 - Cookies should set the Secure flag
 - Cookies should set the HttpOnly flag
+- Swagger URLs should not return 200 (requires --fuzz)
 - HSTS Header should be included in response
 - HSTS Header should have a long max-age
 - HSTS Header should have includeSubdomains
@@ -33,9 +33,11 @@ python3 -m ready.ready <domain>
 - HTML should not use schemeless urls for links or hrefs
 - All script tags should use subresource integrity
 - X-DNS-Prefetch-Control should be set to off
+- CDNs should not be used for Javascript or CSS assets
 - Content-Security-Policy header should exist
 - Content-Security-Policy header should start with default-src 'none'
 - Content-Security-Policy header must not include unsafe-inline
+- Content-Security-Policy header must not include unsafe-eval
 - Content-Security-Policy header should include report-uri
 - Content-Security-Policy header should include report-to
 - Content-Security-Policy header should include upgrade-insecure-requests
@@ -67,3 +69,13 @@ python3 -m ready.ready <domain>
 - SSL connection fails when using TLS 1.1
 - SSL connection fails when using TLS 1.0
 - Response should be a 200 (after redirects)
+
+
+## Not in scope
+
+Some things are best left to other tools, or are generally handled in other ways by web development teams.
+
+- Dependency scanning. Use a service to regularly check that you are using the latest version of your dependencies.
+- Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
+- Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
+
