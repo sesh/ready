@@ -13,8 +13,7 @@ from collections import namedtuple
 from http.cookiejar import CookieJar
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import (HTTPCookieProcessor, HTTPRedirectHandler,
-                            HTTPSHandler, Request, build_opener)
+from urllib.request import HTTPCookieProcessor, HTTPRedirectHandler, HTTPSHandler, Request, build_opener
 
 Response = namedtuple("Response", "request content json status url headers cookiejar")
 

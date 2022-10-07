@@ -24,12 +24,14 @@ from ready.checks.csp import (
     check_csp_should_include_reporturi,
     check_csp_should_only_include_valid_directives,
     check_csp_should_start_with_defaultsrc_none,
+    check_csp_upgrade_insecure_requests,
 )
 from ready.checks.email import (
     check_dmarc_record_should_exist,
     check_spf_dns_record_does_not_exist,
     check_spf_record_should_exist,
     check_spf_txt_record_should_disallow_all,
+    check_spf_uses_less_than_10_requests,
 )
 from ready.checks.expect_ct import (
     check_expect_ct_header_should_exist_in_response,
@@ -81,9 +83,7 @@ from ready.checks.well_known import (
     check_robots_txt_exists,
     check_security_txt_exists,
 )
-from ready.checks.ns import (
-    check_at_least_two_nameservers_configured
-)
+from ready.checks.ns import check_at_least_two_nameservers_configured
 
 from ready.thttp import request, pretty
 
@@ -166,6 +166,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         check_csp_should_exist,
         check_csp_should_start_with_defaultsrc_none,
         check_csp_must_not_include_unsafe_inline,
+        check_csp_upgrade_insecure_requests,
         check_csp_should_include_reporturi,
         check_csp_should_only_include_valid_directives,
         check_report_to_header_should_be_included_in_response,
@@ -193,7 +194,6 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         check_cookies_should_be_samesite,
         check_cookies_should_be_secure,
         check_cookies_should_be_httponly,
-
     ]
 
     if is_html:
@@ -230,6 +230,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
                 check_spf_dns_record_does_not_exist,
                 check_spf_txt_record_should_disallow_all,
                 check_dmarc_record_should_exist,
+                check_spf_uses_less_than_10_requests,
             ]
         )
 

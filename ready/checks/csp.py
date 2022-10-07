@@ -82,6 +82,18 @@ def check_csp_should_include_reportto(responses, **kwargs):
     )
 
 
+# Check: Content-Security-Policy header should include upgrade-insecure-requests
+def check_csp_upgrade_insecure_requests(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp and "upgrade-insecure-requests" in csp,
+        f"Content-Security-Policy header should include upgrade-insecure-requests ({_trunc(csp)})",
+        "csp_upgrade_insecure_requests",
+        **kwargs,
+    )
+
+
 # Check: Content-Security-Policy header only includes valid directives
 def check_csp_should_only_include_valid_directives(responses, **kwargs):
     csp = extract_csp(responses["response"])

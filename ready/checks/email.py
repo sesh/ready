@@ -1,4 +1,7 @@
 from ready.result import result
+import re
+import json
+from ready import thttp
 
 
 # Check: SPF TXT record should exist
@@ -33,6 +36,52 @@ def check_spf_dns_record_does_not_exist(responses, **kwargs):
         len(records) == 0,
         f"SPF DNS record is depreciated and should not exist ({records})",
         "email_spf_dns",
+        **kwargs,
+    )
+
+
+def _spf_for_domain(domain):
+    response = thttp.request(f"https://dns.google/resolve?name={domain}&type=TXT")
+    j = json.loads(response.content)
+
+    spf_records = [(domain, x["data"]) for x in j["Answer"] if x["data"].startswith("v=spf")]
+
+    results = [x for x in spf_records]
+
+    for (_, record) in spf_records:
+        matches = re.findall("include\:([^\s]+)", record)
+
+        for d in matches:
+            results.extend(_spf_for_domain(d))
+
+        matches = re.findall("redirect\=([^\s]+)", record)
+
+        for d in matches:
+            results.extend(_spf_for_domain(d))
+
+    return results
+
+
+# Check: SPF includes use less than 10 DNS requests
+def check_spf_uses_less_than_10_requests(responses, **kwargs):
+    records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
+
+    additional_lookups = []
+    for record in records:
+        matches = re.findall("include\:([^\s]+)", record)
+
+        for d in matches:
+            additional_lookups.extend(_spf_for_domain(d))
+
+        matches = re.findall("redirect\=([^\s]+)", record)
+
+        for d in matches:
+            additional_lookups.extend(_spf_for_domain(d))
+
+    return result(
+        len(additional_lookups) <= 10,
+        f"SPF includes use less than 10 DNS requests ({len(additional_lookups)})",
+        "email_spf_recursion",
         **kwargs,
     )
 
