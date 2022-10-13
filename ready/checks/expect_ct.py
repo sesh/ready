@@ -2,7 +2,7 @@ from ready.result import result
 
 
 # Check: Expect-CT header is in the response
-# NOTE: Expect-CT is deprecated
+# NOTE: Expect-CT is deprecated because it is now on by default in modern browsers
 def check_expect_ct_header_should_exist_in_response(responses, **kwargs):
     return result(
         responses["response"].headers.get("expect-ct") != None,

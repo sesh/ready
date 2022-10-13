@@ -119,10 +119,7 @@ def check_ssl_connection_fails_with_tls_1_0(responses, **kwargs):
     )
 
 
-# TODO Check: SSL certificate is not revoked
-# TODO Check: SSL certificate transparency should be enabled
-
-#  Check: DNS CAA should be enabled
+# Check: DNS CAA should be enabled
 # https://blog.qualys.com/product-tech/2017/03/13/caa-mandated-by-cabrowser-forum
 def check_dns_caa_record_should_exist(responses, **kwargs):
     records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r]

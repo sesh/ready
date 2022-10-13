@@ -70,14 +70,13 @@ python3 -m ready.ready <domain>
 - SSL expiry should be greater than five days
 - SSL connection fails when using TLS 1.1
 - SSL connection fails when using TLS 1.0
+- DNS CAA should be enabled
 - Response should be a 200 (after redirects)
+
 
 ### Potential / WIP
 
 - GraphQL introspection is not enabled
-- IPv6 is supported
-    - AAAA record exists
-    - HTTP / HTTPS responses on IPv6 / IPv4 are similar
 - DNSSEC is supported
 - DKIM is configured
 - SPF must not contain +all or ?all
