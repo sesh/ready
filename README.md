@@ -9,6 +9,7 @@ python3 -m ready.ready <domain>
 
 
 ## Checklist
+
 - Cookies should set the SameSite flag
 - Cookies should set the Secure flag
 - Cookies should set the HttpOnly flag
@@ -17,6 +18,7 @@ python3 -m ready.ready <domain>
 - HSTS Header should have a long max-age
 - HSTS Header should have includeSubdomains
 - HSTS Header should have preload
+- An AAAA DNS record exists (IPv6 Support)
 - Access-Control-Allow-Origin header is in the response
 - Access-Control-Allow-Origin is not set to "*"
 - HTTP -> HTTPS redirection occurs
@@ -70,6 +72,20 @@ python3 -m ready.ready <domain>
 - SSL connection fails when using TLS 1.0
 - Response should be a 200 (after redirects)
 
+### Potential / WIP
+
+- GraphQL introspection is not enabled
+- IPv6 is supported
+    - AAAA record exists
+    - HTTP / HTTPS responses on IPv6 / IPv4 are similar
+- DNSSEC is supported
+- DKIM is configured
+- SPF must not contain +all or ?all
+- SPF must contain "all" (otherwise it defaults to ?all)
+- DMARC contains "p=quarantine" or "p=reject"
+- DMARC / SPF configuration when there is no MX record
+- CSP should contain default-src or script-src (there's no XSS protection by default)
+
 
 ## Not in scope
 
@@ -78,3 +94,14 @@ Some things are best left to other tools, or are generally handled in other ways
 - Dependency scanning. Use a service to regularly check that you are using the latest version of your dependencies.
 - Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
 - Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
+
+
+## Standard Checks
+
+- https://internet.nl/
+- https://www.ssllabs.com/ssltest/
+- https://securityheaders.com/
+- https://csp-evaluator.withgoogle.com/
+- https://observatory.mozilla.org/
+- https://screenshots.page/ (IPv6 screenshots)
+- https://tools.pingdom.com/

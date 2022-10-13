@@ -27,6 +27,9 @@ from ready.checks.csp import (
     check_csp_upgrade_insecure_requests,
     check_csp_must_not_include_unsafe_eval,
 )
+
+from ready.checks.dns import check_aaaa_record_exists
+
 from ready.checks.email import (
     check_dmarc_record_should_exist,
     check_spf_dns_record_does_not_exist,
@@ -141,6 +144,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
     responses["dns_txt_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=TXT")
     responses["dns_spf_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=SPF")
     responses["dns_caa_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=CAA")
+    responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=AAAA")
     responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain}&type=TXT")
 
     if responses["dns_mx_response"] and responses["dns_mx_response"].status == 429:
@@ -163,6 +167,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         check_http_to_https_redirect,
         check_http_response_should_be_200,
         check_http_response_should_include_content_type,
+        check_aaaa_record_exists,
         check_hsts_header_should_be_included_in_response,
         check_hsts_header_should_have_a_long_max_age,
         check_hsts_header_should_have_includesubdomains,
