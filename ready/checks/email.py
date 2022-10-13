@@ -40,8 +40,13 @@ def check_spf_dns_record_does_not_exist(responses, **kwargs):
     )
 
 
-def _spf_for_domain(domain):
+def _spf_for_domain(domain, depth=0, lookups=[]):
+    if domain in lookups:
+        return []
+
     response = thttp.request(f"https://dns.google/resolve?name={domain}&type=TXT")
+    lookups.append(domain)
+
     j = json.loads(response.content)
 
     spf_records = [(domain, x["data"]) for x in j["Answer"] if x["data"].startswith("v=spf")]
@@ -49,15 +54,19 @@ def _spf_for_domain(domain):
     results = [x for x in spf_records]
 
     for (_, record) in spf_records:
+        depth += 1
+        if depth > 13:
+            return results
+
         matches = re.findall("include\:([^\s]+)", record)
 
         for d in matches:
-            results.extend(_spf_for_domain(d))
+            results.extend(_spf_for_domain(d, depth, lookups))
 
         matches = re.findall("redirect\=([^\s]+)", record)
 
         for d in matches:
-            results.extend(_spf_for_domain(d))
+            results.extend(_spf_for_domain(d, depth, lookups))
 
     return results
 
