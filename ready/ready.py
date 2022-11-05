@@ -14,10 +14,7 @@ from ready.checks.corp_coop_coep import (
     check_cross_origin_opener_policy_should_be_sameorigin,
     check_cross_origin_resource_policy_should_be_sameorigin,
 )
-from ready.checks.cors import (
-    check_access_control_allow_origin_is_not_wildcard,
-    check_expect_access_control_allow_origin_in_response,
-)
+
 from ready.checks.csp import (
     check_csp_must_not_include_unsafe_inline,
     check_csp_should_exist,
@@ -222,15 +219,6 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
                 check_html_script_tags_use_sri,
                 check_x_dns_prefetch_control_is_off,
                 check_cdns_should_not_be_used,
-            ]
-        )
-
-    if not is_html:
-        # checks for API endpoints
-        checks.extend(
-            [
-                check_expect_access_control_allow_origin_in_response,
-                check_access_control_allow_origin_is_not_wildcard,
             ]
         )
 

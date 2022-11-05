@@ -19,8 +19,6 @@ python3 -m ready.ready <domain>
 - HSTS Header should have includeSubdomains
 - HSTS Header should have preload
 - An AAAA DNS record exists (IPv6 Support)
-- Access-Control-Allow-Origin header is in the response
-- Access-Control-Allow-Origin is not set to "*"
 - HTTP -> HTTPS redirection occurs
 - Permissions-Policy should exist if the response is HTML
 - frame-ancestors should be in CSP or X-Frame-Options should exist if the response is HTML
@@ -28,7 +26,7 @@ python3 -m ready.ready <domain>
 - Referrer-Policy should be set
 - X-XSS-Protection should be set to "1; mode=block"
 - HTML should start with "<!doctype html>"
-- <html> tag should include lang
+- `<html>` tag should include lang
 - HTML should include meta charset tag
 - HTML should include <title>
 - HTML should include link with rel="icon"
@@ -84,6 +82,7 @@ python3 -m ready.ready <domain>
 - DMARC contains "p=quarantine" or "p=reject"
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)
+- RSS / JSON feeds should have Access-Control-Allow-Origin set
 
 
 ## Not in scope
@@ -104,3 +103,4 @@ Some things are best left to other tools, or are generally handled in other ways
 - https://observatory.mozilla.org/
 - https://screenshots.page/ (IPv6 screenshots)
 - https://tools.pingdom.com/
+- https://github.com/raviqqe/muffet (Dead Links)
