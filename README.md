@@ -83,7 +83,6 @@ python3 -m ready.ready <domain>
 - DMARC contains "p=quarantine" or "p=reject"
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)
-- RSS / JSON feeds should have Access-Control-Allow-Origin set
 
 
 ## Not in scope
