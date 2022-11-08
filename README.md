@@ -28,13 +28,13 @@ python3 -m ready.ready <domain>
 - HTML should start with "<!doctype html>"
 - `<html>` tag should include lang
 - HTML should include meta charset tag
-- HTML should include <title>
+- HTML should include `<title>`
 - HTML should include link with rel="icon"
 - HTML should not use schemeless urls for links or hrefs
 - All script tags should use subresource integrity
 - X-DNS-Prefetch-Control should be set to off
 - CDNs should not be used for Javascript or CSS assets
-- RSS feeds should return Access-Control-Allow-Origin header
+- RSS and JSON feeds should return Access-Control-Allow-Origin header
 - Content-Security-Policy header should exist
 - Content-Security-Policy header should start with default-src 'none'
 - Content-Security-Policy header must not include unsafe-inline
@@ -93,6 +93,7 @@ Some things are best left to other tools, or are generally handled in other ways
 - Dependency scanning. Use a service to regularly check that you are using the latest version of your dependencies.
 - Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
 - Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
+- Checking for dead links. Use [`muffet`](https://github.com/raviqqe/muffet) or similar for that one.
 
 
 ## Standard Checks

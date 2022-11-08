@@ -67,7 +67,7 @@ def check_html_starts_with_doctype(responses, **kwargs):
     )
 
 
-# Check: <html> tag should include lang
+# Check: `<html>` tag should include lang
 def check_html_tag_includes_lang(responses, **kwargs):
     if "<html" in responses["response"].content.decode(errors="ignore"):
         html_tag = responses["response"].content.decode(errors="ignore").split("<html")[1].split(">")[0].replace("'", '"')
@@ -92,7 +92,7 @@ def check_html_meta_charset(responses, **kwargs):
     )
 
 
-# Check: HTML should include <title>
+# Check: HTML should include `<title>`
 def check_html_includes_title(responses, **kwargs):
     return result(
         b"<title>" in responses["response"].content.lower(),
