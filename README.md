@@ -34,6 +34,7 @@ python3 -m ready.ready <domain>
 - All script tags should use subresource integrity
 - X-DNS-Prefetch-Control should be set to off
 - CDNs should not be used for Javascript or CSS assets
+- RSS feeds should return Access-Control-Allow-Origin header
 - Content-Security-Policy header should exist
 - Content-Security-Policy header should start with default-src 'none'
 - Content-Security-Policy header must not include unsafe-inline
