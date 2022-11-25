@@ -203,7 +203,7 @@ def check_rss_should_return_cors_header(responses, **kwargs):
 
     return result(
         all([x is not None for x in cors_values]),
-        f"RSS and JSON feeds should return Access-Control-Allow-Origin header ({', '.join(feed_urls)})",
+        f"RSS and JSON feeds should return Access-Control-Allow-Origin header ({', '.join(feed_urls) if feed_urls else 'no feeds'})",
         "feeds_cors_enabled",
         **kwargs
     )
