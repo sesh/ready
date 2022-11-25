@@ -18,8 +18,9 @@ def check_permissions_policy_should_exist(responses, **kwargs):
 # Check: frame-ancestors should be in CSP or X-Frame-Options should exist if the response is HTML
 def check_frame_ancestors_should_exist(responses, **kwargs):
     csp = extract_csp(responses["response"])
+
     return result(
-        responses["response"].headers.get("x-frame-options") != None or (csp and "frame-ancestors" in csp),
+        responses["response"].headers.get("x-frame-options") != None or (csp != None and "frame-ancestors" in csp),
         f"frame-ancestors should be in CSP or X-Frame-Options should exist if the response is HTML (X-Frame-Options: {responses['response'].headers.get('x-frame-options')}, CSP: {csp})",
         "html_frame_ancestors",
         **kwargs,
@@ -175,18 +176,18 @@ def check_cdns_should_not_be_used(responses, **kwargs):
 # Check: RSS and JSON feeds should return Access-Control-Allow-Origin header
 def check_rss_should_return_cors_header(responses, **kwargs):
     feed_types = [
-        'application/rss+xml',
-        'application/feed+json',
+        "application/rss+xml",
+        "application/feed+json",
     ]
 
     link_tags = re.findall(b"<link (.+)>", responses["response"].content)
     feed_urls = []
 
     for tag in link_tags:
-        tag = tag.decode().replace("\'", "\"")
+        tag = tag.decode().replace("'", '"')
         if 'rel="alternate"' in tag:
             if any([f in tag for f in feed_types]):
-                link = re.search("href\=\"(.+)\"", tag)
+                link = re.search('href\="(.+)"', tag)
                 if link:
                     url = link.groups()[0]
                     feed_urls.append(url)
@@ -199,12 +200,11 @@ def check_rss_should_return_cors_header(responses, **kwargs):
             url = responses["response"].url.rstrip("/") + url
 
         response = thttp.request(url)
-        cors_values.append(response.headers.get('access-control-allow-origin'))
+        cors_values.append(response.headers.get("access-control-allow-origin"))
 
     return result(
         all([x is not None for x in cors_values]),
         f"RSS and JSON feeds should return Access-Control-Allow-Origin header ({', '.join(feed_urls) if feed_urls else 'no feeds'})",
         "feeds_cors_enabled",
-        **kwargs
+        **kwargs,
     )
-

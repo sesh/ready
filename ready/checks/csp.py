@@ -99,7 +99,7 @@ def check_csp_upgrade_insecure_requests(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
     return result(
-        csp and "upgrade-insecure-requests" in csp,
+        csp != None and "upgrade-insecure-requests" in csp,
         f"Content-Security-Policy header should include upgrade-insecure-requests ({_trunc(csp)})",
         "csp_upgrade_insecure_requests",
         **kwargs,
