@@ -250,6 +250,8 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         print(
             json.dumps(
                 {
+                    "domain": domain,
+                    "score": score_from_results(results),
                     "checks": {
                         r.check: {
                             "passed": r.passed,
@@ -264,6 +266,10 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         )
 
     return results
+
+
+def score_from_results(results):
+    return 100 - 3 * len([x for x in results if not x.passed and not x.warn_on_fail])
 
 
 def parse_args(args):
@@ -319,7 +325,7 @@ def cli():
     )
 
     if "--score" in args:
-        print(f"Score: {100 - 3 * len([x for x in results if not x.passed and not x.warn_on_fail])}/100")
+        print(f"Score: {score_from_results(results)}/100")
 
 
 if __name__ == "__main__":
