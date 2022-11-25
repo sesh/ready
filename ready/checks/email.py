@@ -49,7 +49,7 @@ def _spf_for_domain(domain, depth=0, lookups=[]):
 
     j = json.loads(response.content)
 
-    spf_records = [(domain, x["data"]) for x in j["Answer"] if x["data"].startswith("v=spf")]
+    spf_records = [(domain, x["data"]) for x in j.get("Answer", []) if x["data"].startswith("v=spf")]
 
     results = [x for x in spf_records]
 
