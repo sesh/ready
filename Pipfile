@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 ready = {path = "."}
+beautifulsoup4 = "*"
 
 [dev-packages]
 

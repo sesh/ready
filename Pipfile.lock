@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4595890b5ba91fdc552833f2d5b11af5647ff64fc64b9867bfe55ea6f661109e"
+            "sha256": "280c488e2501ca559182d4f47ea6034365a96fb8a08b49e03d6b0bad2d5bf4fe"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,9 +16,25 @@
         ]
     },
     "default": {
+        "beautifulsoup4": {
+            "hashes": [
+                "sha256:58d5c3d29f5a36ffeb94f02f0d786cd53014cf9b3b3951d42e0080d8a9498d30",
+                "sha256:ad9aa55b65ef2808eb405f46cf74df7fcb7044d5cbc26487f96eb2ef2e436693"
+            ],
+            "index": "pypi",
+            "version": "==4.11.1"
+        },
         "ready": {
             "path": ".",
             "version": "==1.0.0"
+        },
+        "soupsieve": {
+            "hashes": [
+                "sha256:3b2503d3c7084a42b1ebd08116e5f81aadfaea95863628c80a3b774a11b7c759",
+                "sha256:fc53893b3da2c33de295667a0e19f078c14bf86544af307354de5fcf12a3f30d"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==2.3.2.post1"
         },
         "thttp": {
             "hashes": [
@@ -27,6 +43,19 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==1.1.0"
+        },
+        "tld": {
+            "hashes": [
+                "sha256:266106ad9035f54cd5cce5f823911a51f697e7c58cb45bfbd6c53b4c2976ece2",
+                "sha256:69fed19d26bb3f715366fb4af66fdeace896c55c052b00e8aaba3a7b63f3e7f0",
+                "sha256:826bbe61dccc8d63144b51caef83e1373fbaac6f9ada46fca7846021f5d36fef",
+                "sha256:843844e4256c943983d86366b5af3ac9cd1c9a0b6465f04d9f70e3b4c1a7989f",
+                "sha256:a92ac6b84917e7d9e934434b8d37e9be534598f138fbb86b3c0d5426f2621890",
+                "sha256:b6650f2d5392a49760064bc55d73ce3397a378ef24ded96efb516c6b8ec68c26",
+                "sha256:ef5b162d6fa295822dacd4fe4df1b62d8df2550795a97399a8905821b58d3702"
+            ],
+            "markers": "python_version >= '2.7' and python_version < '4'",
+            "version": "==0.12.6"
         }
     },
     "develop": {}

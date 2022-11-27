@@ -11,8 +11,13 @@ python3 -m ready.ready <domain>
 
 For more, check out `--help`.
 
-You can optionally install the `tld` package to support using the fully-qualified domain name for some checks.
-This is particularly handy if you need to check a subdomain.
+
+### Optional Dependencies
+
+There are no required dependencies, but two optional dependencies that enable some additional behaviour:
+
+- Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is particularly handy if you need to check a subdomain.
+- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document instead of the headers. This can be common on sites that use static hosting like Github Pages.
 
 
 ## Check list
