@@ -155,12 +155,12 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
 
 
     if domain != fld:
-
         responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
         responses["dns_mx_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=MX")
         responses["dns_spf_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=SPF")
         responses["dns_txt_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=TXT")
         responses["dns_dmarc_response_fld"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{fld}&type=TXT")
+        responses["dns_caa_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=CAA")
 
     checks = []
     is_html = "html" in responses["response"].headers.get("content-type", "")

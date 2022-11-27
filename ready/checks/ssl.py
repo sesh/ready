@@ -123,6 +123,10 @@ def check_ssl_connection_fails_with_tls_1_0(responses, **kwargs):
 # https://blog.qualys.com/product-tech/2017/03/13/caa-mandated-by-cabrowser-forum
 def check_dns_caa_record_should_exist(responses, **kwargs):
     records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r]
+
+    if not records and "dns_caa_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r]
+
     return result(
         records and all(["issue" in r or "iodef" in r for r in records]),
         f"DNS CAA should be enabled ({records})",
