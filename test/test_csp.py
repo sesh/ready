@@ -38,5 +38,5 @@ class ReadyTestCase(TestCase):
 
             csp = extract_csp(response)
             self.assertEqual(csp, "default-src 'self'; img-src https://*; child-src 'none';")
-        except:
-            pass
+        except ImportError:
+            print("Not executing CSP test because beautifulsoup is not available.")
