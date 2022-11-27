@@ -82,7 +82,6 @@ python3 -m ready.ready <domain>
 - DNSSEC is supported
 - DKIM is configured
 - SPF must not contain +all or ?all
-- SPF must contain "-all" (otherwise it defaults to ?all)
 - DMARC contains "p=quarantine" or "p=reject"
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)

@@ -117,6 +117,28 @@ def check_dmarc_record_should_exist(responses, **kwargs):
     return result(
         records and all([r.startswith("v=DMARC1") for r in records]),
         f"DMARC record should exist ({records})",
-        "email_dmarc",
+        "email_dmarc_exists",
+        **kwargs,
+    )
+
+
+# Check: DMARC record should not contain "p=none"
+def check_dmarc_record_should_not_have_none_policy(responses, **kwargs):
+    records = [r["data"] for r in responses["dns_dmarc_response"].json.get("Answer", []) if "data" in r]
+
+    if not records and "dns_dmarc_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_dmarc_response_fld"].json.get("Answer", []) if "data" in r]
+
+    failing = len(records) == 0
+    print(failing)
+
+    for r in records:
+        if "p=none" in [x.strip().lower() for x in r.split(";")]:
+            failing = True
+
+    return result(
+        not failing,
+        f"DMARC record should not contain 'p=none' ({records})",
+        "email_dmarc_none",
         **kwargs,
     )

@@ -29,6 +29,7 @@ from ready.checks.dns import check_aaaa_record_exists
 
 from ready.checks.email import (
     check_dmarc_record_should_exist,
+    check_dmarc_record_should_not_have_none_policy,
     check_spf_dns_record_does_not_exist,
     check_spf_record_should_exist,
     check_spf_txt_record_should_disallow_all,
@@ -254,6 +255,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
                 check_spf_dns_record_does_not_exist,
                 check_spf_txt_record_should_disallow_all,
                 check_dmarc_record_should_exist,
+                check_dmarc_record_should_not_have_none_policy,
                 check_spf_uses_less_than_10_requests,
             ]
         )
