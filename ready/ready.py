@@ -94,6 +94,7 @@ from ready.checks.bad_response import check_bad_response_kasada, check_bad_respo
 
 from ready.thttp import request, pretty
 
+from tld import get_fld
 
 DEFAULT_HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -115,6 +116,11 @@ def response_or_none(url, **kwargs):
 
 
 def ready(domain, print_headers=False, print_content=False, json_output=False, hide_output=False, fuzz=False, extra_args={}):
+    domain_with_no_path = urllib.parse.urlparse("https://" + domain).hostname
+    fld = get_fld(domain, fix_protocol=True)
+
+    print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
+
     responses = {
         "http_response": response_or_none(f"http://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
         "response": response_or_none(f"https://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
@@ -130,27 +136,31 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         timeout=3,
     )
 
-    responses["robots_txt_response"] = response_or_none(f"https://{domain}/robots.txt", headers=DEFAULT_HEADERS, timeout=3)
+    responses["robots_txt_response"] = response_or_none(f"https://{domain_with_no_path}/robots.txt", headers=DEFAULT_HEADERS, timeout=3)
 
     responses["favicon_response"] = response_or_none(
-        f"https://{domain}/favicon.ico",
+        f"https://{domain_with_no_path}/favicon.ico",
         verify=False,
         headers=DEFAULT_HEADERS,
         timeout=3,
     )
 
-    responses["dns_ns_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=NS")
-    responses["dns_mx_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=MX")
-    responses["dns_txt_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=TXT")
-    responses["dns_spf_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=SPF")
-    responses["dns_caa_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=CAA")
-    responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain}&type=AAAA")
-    responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain}&type=TXT")
+    responses["dns_ns_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=NS")
+    responses["dns_mx_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=MX")
+    responses["dns_txt_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=TXT")
+    responses["dns_spf_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=SPF")
+    responses["dns_caa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA")
+    responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA")
+    responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT")
 
-    if responses["dns_mx_response"] and responses["dns_mx_response"].status == 429:
-        print("DNS Queries have been rate limited")
-        print(responses["dns_mx_response"])
-        sys.exit(1)
+
+    if domain != fld:
+
+        responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
+        responses["dns_mx_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=MX")
+        responses["dns_spf_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=SPF")
+        responses["dns_txt_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=TXT")
+        responses["dns_dmarc_response_fld"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{fld}&type=TXT")
 
     checks = []
     is_html = "html" in responses["response"].headers.get("content-type", "")
@@ -234,7 +244,8 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             ]
         )
 
-    if responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json:
+    if ((responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json) or
+        (responses["dns_mx_response_fld"] and "Answer" in responses["dns_mx_response_fld"].json)):
         checks.extend(
             [
                 check_spf_record_should_exist,

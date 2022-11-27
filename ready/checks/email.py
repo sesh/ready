@@ -8,6 +8,9 @@ from ready import thttp
 def check_spf_record_should_exist(responses, **kwargs):
     records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
 
+    if not records and "dns_txt_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if r["data"].startswith("v=spf")]
+
     return result(
         len(records) > 0,
         f"SPF TXT record should exist ({records})",
@@ -20,6 +23,9 @@ def check_spf_record_should_exist(responses, **kwargs):
 def check_spf_txt_record_should_disallow_all(responses, **kwargs):
     records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
 
+    if not records and "dns_txt_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if r["data"].startswith("v=spf")]
+
     return result(
         records and all(["-all" in r for r in records]),
         f'SPF TXT record should contain "-all" ({records})',
@@ -31,6 +37,9 @@ def check_spf_txt_record_should_disallow_all(responses, **kwargs):
 # Check: SPF DNS record is depreciated and should not exist
 def check_spf_dns_record_does_not_exist(responses, **kwargs):
     records = [r["data"] for r in responses["dns_spf_response"].json.get("Answer", []) if "data" in r]
+
+    if "dns_spf_response_fld" in responses:
+        records.extend([r["data"] for r in responses["dns_spf_response_fld"].json.get("Answer", []) if "data" in r])
 
     return result(
         len(records) == 0,
@@ -75,6 +84,9 @@ def _spf_for_domain(domain, depth=0, lookups=[]):
 def check_spf_uses_less_than_10_requests(responses, **kwargs):
     records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
 
+    if not records and "dns_txt_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if "data" in r]
+
     additional_lookups = []
     for record in records:
         matches = re.findall("include\:([^\s]+)", record)
@@ -98,6 +110,10 @@ def check_spf_uses_less_than_10_requests(responses, **kwargs):
 # Check: DMARC record should exist
 def check_dmarc_record_should_exist(responses, **kwargs):
     records = [r["data"] for r in responses["dns_dmarc_response"].json.get("Answer", []) if "data" in r]
+
+    if not records and "dns_dmarc_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_dmarc_response_fld"].json.get("Answer", []) if "data" in r]
+
     return result(
         records and all([r.startswith("v=DMARC1") for r in records]),
         f"DMARC record should exist ({records})",
