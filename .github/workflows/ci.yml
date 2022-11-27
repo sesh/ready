@@ -26,7 +26,7 @@ jobs:
 
     - name: Install coverage
       run: |
-        python -m pip install thttp
+        python -m pip install thttp tld
 
     - name: Test with unittest
       run: |
@@ -45,7 +45,7 @@ jobs:
 
     - name: Install coverage
       run: |
-        python -m pip install coverage httpie thttp
+        python -m pip install coverage httpie thttp tld
 
     - name: Run coverage
       run: |
