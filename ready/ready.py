@@ -95,7 +95,13 @@ from ready.checks.bad_response import check_bad_response_kasada, check_bad_respo
 
 from ready.thttp import request, pretty
 
-from tld import get_fld
+USE_FLD = True
+
+try:
+    from tld import get_fld
+except ImportError:
+    USE_FLD = False
+
 
 DEFAULT_HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -118,7 +124,11 @@ def response_or_none(url, **kwargs):
 
 def ready(domain, print_headers=False, print_content=False, json_output=False, hide_output=False, fuzz=False, extra_args={}):
     domain_with_no_path = urllib.parse.urlparse("https://" + domain).hostname
-    fld = get_fld(domain, fix_protocol=True)
+
+    if USE_FLD:
+        fld = get_fld(domain, fix_protocol=True)
+    else:
+        fld = "Disabled. Install tld if fld is different to domain."
 
     print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
 
@@ -156,7 +166,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
     responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA")
     responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT")
 
-    if domain != fld:
+    if USE_FLD and domain != fld:
         responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
         responses["dns_mx_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=MX")
         responses["dns_spf_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=SPF")
