@@ -48,6 +48,8 @@ python3 -m ready.ready <domain>
 - cross-origin-opener-policy should be "same-origin"
 - Cross-Origin-Embedder-Policy should be "require-corp"
 - Report-To Header should be included in response
+- Response should not contain hints of a Cloudflare captcha page
+- Response should not contain hints of a Kasada error page
 - Response should include a Content-Type
 - Response should be gzipped
 - Content-Type header should contain charset
@@ -73,6 +75,7 @@ python3 -m ready.ready <domain>
 - Response should be a 200 (after redirects)
 
 
+
 ### Potential / WIP
 
 - GraphQL introspection is not enabled
@@ -83,6 +86,7 @@ python3 -m ready.ready <domain>
 - DMARC contains "p=quarantine" or "p=reject"
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)
+- Detections for different WAFs that might be returning instead of the intended content (Cloudflare, Imperva, Kasada, etc.)
 
 
 ## Not in scope
@@ -93,7 +97,7 @@ Some things are best left to other tools, or are generally handled in other ways
 - Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
 - Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
 - Checking for dead links. Use [`muffet`](https://github.com/raviqqe/muffet) or similar for that one.
-
+- Scans for specific WAFs (use wafw00f for detection)
 
 ## Standard Checks
 

@@ -90,6 +90,8 @@ from ready.checks.ns import check_at_least_two_nameservers_configured
 
 from ready.checks.swagger import check_swagger_should_not_return_200
 
+from ready.checks.bad_response import check_bad_response_kasada, check_bad_response_cloudflare
+
 from ready.thttp import request, pretty
 
 
@@ -161,7 +163,13 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
     if print_content:
         print(responses["response"].content)
 
+    # bad response checks go first
     checks = [
+        check_bad_response_kasada,
+        check_bad_response_cloudflare,
+    ]
+
+    checks.extend([
         check_http_to_https_redirect,
         check_http_response_should_be_200,
         check_http_response_should_include_content_type,
@@ -202,7 +210,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         check_cookies_should_be_samesite,
         check_cookies_should_be_secure,
         check_cookies_should_be_httponly,
-    ]
+    ])
 
     if is_html:
         checks.extend(
