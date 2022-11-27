@@ -24,15 +24,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install coverage
+    - name: Install dependencies
       run: |
-        python -m pip install tld
+        python -m pip install tld beautifulsoup4
 
     - name: Test with unittest
       run: |
         python -m unittest discover test
 
-  test_without_tld:
+  test_without_dependencies:
     runs-on: ubuntu-latest
 
     steps:
@@ -60,7 +60,7 @@ jobs:
 
     - name: Install coverage
       run: |
-        python -m pip install coverage httpie tld
+        python -m pip install coverage httpie tld beautifulsoup4
 
     - name: Run coverage
       run: |
