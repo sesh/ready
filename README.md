@@ -1,14 +1,21 @@
-`ready` is a tool for developers to check how production ready their website or API is.
+`ready` is a tool for developers to check how production ready their website.
 
 
 ## Usage
+
+This package is not (yet) on PyPI, so clone the repo and run it with:
 
 ```
 python3 -m ready.ready <domain>
 ```
 
+For more, check out `--help`.
 
-## Checklist
+You can optionally install the `tld` package to support using the fully-qualified domain name for some checks.
+This is particularly handy if you need to check a subdomain.
+
+
+## Check list
 
 - Cookies should set the SameSite flag
 - Cookies should set the Secure flag
@@ -60,6 +67,7 @@ python3 -m ready.ready <domain>
 - SPF DNS record is depreciated and should not exist
 - SPF includes use less than 10 DNS requests
 - DMARC record should exist
+- DMARC record should contain p=reject
 - Expect-CT header is in the response
 - Expect-CT header should include report-uri
 - Robots.txt exists and is a text file
@@ -75,14 +83,12 @@ python3 -m ready.ready <domain>
 - Response should be a 200 (after redirects)
 
 
-
 ### Potential / WIP
 
 - GraphQL introspection is not enabled
 - DNSSEC is supported
 - DKIM is configured
 - SPF must not contain +all or ?all
-- DMARC contains "p=quarantine" or "p=reject"
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)
 - Detections for different WAFs that might be returning instead of the intended content (Cloudflare, Imperva, Kasada, etc.)
@@ -98,7 +104,11 @@ Some things are best left to other tools, or are generally handled in other ways
 - Checking for dead links. Use [`muffet`](https://github.com/raviqqe/muffet) or similar for that one.
 - Scans for specific WAFs (use wafw00f for detection)
 
+
 ## Standard Checks
+
+This tool overlaps with a bunch of other online site checking tool.
+I use these ones on a regular basis (and recommend them):
 
 - https://internet.nl/
 - https://www.ssllabs.com/ssltest/
