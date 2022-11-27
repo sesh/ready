@@ -136,7 +136,9 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         timeout=3,
     )
 
-    responses["robots_txt_response"] = response_or_none(f"https://{domain_with_no_path}/robots.txt", headers=DEFAULT_HEADERS, timeout=3)
+    responses["robots_txt_response"] = response_or_none(
+        f"https://{domain_with_no_path}/robots.txt", headers=DEFAULT_HEADERS, timeout=3
+    )
 
     responses["favicon_response"] = response_or_none(
         f"https://{domain_with_no_path}/favicon.ico",
@@ -152,7 +154,6 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
     responses["dns_caa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA")
     responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA")
     responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT")
-
 
     if domain != fld:
         responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
@@ -244,8 +245,9 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             ]
         )
 
-    if ((responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json) or
-        (responses["dns_mx_response_fld"] and "Answer" in responses["dns_mx_response_fld"].json)):
+    if (responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json) or (
+        responses["dns_mx_response_fld"] and "Answer" in responses["dns_mx_response_fld"].json
+    ):
         checks.extend(
             [
                 check_spf_record_should_exist,
