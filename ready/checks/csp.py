@@ -4,6 +4,7 @@ USE_BS4 = True
 
 try:
     from bs4 import BeautifulSoup
+
     USE_BS4 = True
 except ImportError:
     USE_BS4 = False
@@ -14,10 +15,10 @@ def extract_csp(response):
         return response.headers["content-security-policy"]
 
     if USE_BS4:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        meta_tags = soup.find_all('meta')
+        soup = BeautifulSoup(response.content, "html.parser")
+        meta_tags = soup.find_all("meta")
         for t in meta_tags:
-            if t.attrs.get('http-equiv', "").lower() == "content-security-policy":
+            if t.attrs.get("http-equiv", "").lower() == "content-security-policy":
                 return t.attrs.get("content", "")
     else:
         print("No Content-Security-Policy header, and beautifulsoup4 is not installed to inspect HTML")

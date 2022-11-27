@@ -2,8 +2,8 @@ from unittest import TestCase
 from ready.checks.csp import extract_csp
 from ready.thttp import Response
 
-class ReadyTestCase(TestCase):
 
+class ReadyTestCase(TestCase):
     def test_extract_csp_meta_tag(self):
         content = """<!doctype html>
         <html lang="en">
@@ -35,6 +35,7 @@ class ReadyTestCase(TestCase):
 
         try:
             from bs4 import BeautifulSoup
+
             csp = extract_csp(response)
             self.assertEqual(csp, "default-src 'self'; img-src https://*; child-src 'none';")
         except:
