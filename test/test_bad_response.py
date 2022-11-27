@@ -1,6 +1,6 @@
 from ready.checks.bad_response import check_bad_response_kasada, check_bad_response_cloudflare
 from unittest import TestCase
-from thttp import Response
+from ready.thttp import Response
 
 
 class CloudflareTestCase(TestCase):
