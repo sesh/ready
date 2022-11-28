@@ -94,6 +94,7 @@ def check_csp_should_include_reporturi(responses, **kwargs):
         csp != None and (("report-uri https://" in csp)),
         f"Content-Security-Policy header should include report-uri ({_trunc(csp)})",
         "csp_report_uri",
+        warn_on_fail=True,
         **kwargs,
     )
 
