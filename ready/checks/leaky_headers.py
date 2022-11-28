@@ -3,7 +3,8 @@ import re
 from ready.result import result
 
 LEAKY_HEADERS = [
-    "apigw-requestid" "cdn-cache",
+    "apigw-requestid",
+    "cdn-cache",
     "cf-edge-cache",
     "fastly-debug-states",
     "fly-request-id",
@@ -62,6 +63,6 @@ def check_should_not_include_leaky_headers(responses, **kwargs):
     return result(
         len(leaky) == 0,
         f"Headers that leak information should not be in the response ({leaky})",
-        "cors_header_exists",
+        "leaky_headers",
         **kwargs,
     )

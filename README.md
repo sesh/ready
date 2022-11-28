@@ -99,6 +99,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - CSP: default-src or script-src must be set
 - CSP: object-src none must be set
 - Check for source maps in JS
+- HTML: contains viewport
 
 
 ## Not in scope
