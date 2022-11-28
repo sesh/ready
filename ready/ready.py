@@ -36,10 +36,7 @@ from ready.checks.email import (
     check_spf_txt_record_should_disallow_all,
     check_spf_uses_less_than_10_requests,
 )
-from ready.checks.expect_ct import (
-    check_expect_ct_header_should_exist_in_response,
-    check_expect_ct_header_should_include_report_uri,
-)
+
 from ready.checks.hsts import (
     check_hsts_header_should_be_included_in_response,
     check_hsts_header_should_have_a_long_max_age,
@@ -222,8 +219,6 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_cross_origin_resource_policy_should_be_sameorigin,
             check_cross_origin_opener_policy_should_be_sameorigin,
             check_cross_origin_embedder_policy_should_be_require_corp,
-            check_expect_ct_header_should_exist_in_response,
-            check_expect_ct_header_should_include_report_uri,
             check_should_not_include_leaky_headers,
             check_ssl_expiry_should_be_less_than_one_year,
             check_ssl_expiry_should_be_greater_than_five_days,

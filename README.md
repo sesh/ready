@@ -73,8 +73,6 @@ There are no required dependencies, but two optional dependencies that enable so
 - SPF includes use less than 10 DNS requests
 - DMARC record should exist
 - DMARC record should contain p=reject
-- Expect-CT header is in the response
-- Expect-CT header should include report-uri
 - Robots.txt exists and is a text file
 - Security.txt exists and is a text file that contains required attributes
 - Favicon is served at /favicon.ico
