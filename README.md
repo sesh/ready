@@ -97,6 +97,9 @@ There are no required dependencies, but two optional dependencies that enable so
 - DMARC / SPF configuration when there is no MX record
 - CSP should contain default-src or script-src (there's no XSS protection by default)
 - Detections for different WAFs that might be returning instead of the intended content (Cloudflare, Imperva, Kasada, etc.)
+- DNS TTL should be > 300, this reduces the number of DNS requests clients need to make
+- CSP: default-src or script-src must be set
+- CSP: object-src none must be set
 
 
 ## Not in scope
