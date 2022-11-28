@@ -47,13 +47,13 @@ def check_referrer_policy_should_be_set(responses, **kwargs):
     )
 
 
-# Check: X-XSS-Protection should be set to "1; mode=block"
-# NOTE: required-ish for older browsers, even with a CSP
-def check_x_xss_protection_should_be_set(responses, **kwargs):
+# Check: X-XSS-Protection header should not exist
+def check_x_xss_protection_should_not_exist(responses, **kwargs):
     return result(
-        responses["response"].headers.get("x-xss-protection") == "1; mode=block",
-        f'X-XSS-Protection should be set to "1; mode=block" ({responses["response"].headers.get("x-xss-protection")})',
-        "html_x_xss_protection",
+        "x-xss-protection" not in responses["response"].headers,
+        f'X-XSS-Protection header should not exist" ({responses["response"].headers.get("x-xss-protection")})',
+        "html_x_xss_protection_not_set",
+        warn_on_fail=True,
         **kwargs,
     )
 

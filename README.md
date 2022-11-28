@@ -36,7 +36,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - frame-ancestors should be in CSP or X-Frame-Options should exist if the response is HTML
 - X-Content-Type-options should be "nosniff"
 - Referrer-Policy should be set
-- X-XSS-Protection should be set to "1; mode=block"
+- X-XSS-Protection header should not exist
 - HTML should start with "<!doctype html>"
 - `<html>` tag should include lang
 - HTML should include meta charset tag
@@ -98,6 +98,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - DNS TTL should be > 300, this reduces the number of DNS requests clients need to make
 - CSP: default-src or script-src must be set
 - CSP: object-src none must be set
+- Check for source maps in JS
 
 
 ## Not in scope
