@@ -70,7 +70,7 @@ def check_ssl_certificate_should_be_trusted(responses, **kwargs):
 
 # Check: SSL expiry should be less than one year
 def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
-    ssl_expiry = get_ssl_expiry(kwargs["domain"])
+    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
     result(
         ssl_expiry_days and ssl_expiry_days < 366,
@@ -82,7 +82,7 @@ def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
 
 # Check: SSL expiry should be greater than five days
 def check_ssl_expiry_should_be_greater_than_five_days(responses, **kwargs):
-    ssl_expiry = get_ssl_expiry(kwargs["domain"])
+    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
 
     result(
