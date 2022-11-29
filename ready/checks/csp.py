@@ -131,10 +131,10 @@ def check_csp_should_only_include_valid_directives(responses, **kwargs):
     directives = []
 
     if csp:
-        for directive in csp.split(';'):
+        for directive in csp.split(";"):
             directive = directive.strip()
 
-            if ' ' in directive:
+            if " " in directive:
                 directives.append(directive.split()[0])
             else:
                 directives.append(directive.strip())

@@ -85,7 +85,11 @@ def check_spf_uses_less_than_10_requests(responses, **kwargs):
     records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
 
     if not records and "dns_txt_response_fld" in responses:
-        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if "data" in r and r["data"].startswith("v=spf")]
+        records = [
+            r["data"]
+            for r in responses["dns_txt_response_fld"].json.get("Answer", [])
+            if "data" in r and r["data"].startswith("v=spf")
+        ]
 
     additional_lookups = []
     for record in records:
@@ -167,12 +171,12 @@ def check_spf_dash_all(responses, **kwargs):
             spf_record.lower().strip() == "v=spf1 -all",
             f"SPF should be 'v=spf1 -all' if there are no MX records or MX record is '.' ({spf_record})",
             "email_spf_disallow_all_with_empty_mx",
-            **kwargs
+            **kwargs,
         )
     else:
         return result(
             True,
             f"SPF should be 'v=spf1 -all' if there are no MX records or MX record is '.' (MX records exist: {mx_record_data})",
             "email_spf_disallow_all_with_empty_mx",
-            **kwargs
+            **kwargs,
         )

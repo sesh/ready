@@ -107,7 +107,7 @@ DEFAULT_HEADERS = {
     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15",
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "accept-language": "en-AU,en;q=0.9",
-    "accept-encoding": "gzip"
+    "accept-encoding": "gzip",
 }
 
 
@@ -263,9 +263,11 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         )
 
     if fuzz:
-        checks.extend([
-            check_swagger_should_not_return_200,
-        ])
+        checks.extend(
+            [
+                check_swagger_should_not_return_200,
+            ]
+        )
 
     extra_args["print_output"] = not hide_output
 
