@@ -35,6 +35,7 @@ from ready.checks.email import (
     check_spf_record_should_exist,
     check_spf_txt_record_should_disallow_all,
     check_spf_uses_less_than_10_requests,
+    check_spf_dash_all,
 )
 
 from ready.checks.hsts import (
@@ -102,10 +103,11 @@ except ImportError:
 
 
 DEFAULT_HEADERS = {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-    "Accept-Encoding": "gzip, deflate",
-    "Accept-Language": "en-US,en;q=0.5",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0) Gecko/20100101 Firefox/105.0",
+    # MacOS Safari
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15",
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "accept-language": "en-AU,en;q=0.9",
+    "accept-encoding": "gzip"
 }
 
 
@@ -140,7 +142,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         return None
 
     responses["security_txt_response"] = response_or_none(
-        f"https://{domain}/.well-known/security.txt",
+        f"https://{domain_with_no_path}/.well-known/security.txt",
         headers=DEFAULT_HEADERS,
         timeout=3,
     )
@@ -230,6 +232,13 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_cookies_should_be_samesite,
             check_cookies_should_be_secure,
             check_cookies_should_be_httponly,
+            check_spf_dash_all,
+            check_spf_record_should_exist,
+            check_spf_dns_record_does_not_exist,
+            check_spf_txt_record_should_disallow_all,
+            check_dmarc_record_should_exist,
+            check_dmarc_record_should_reject_failures,
+            check_spf_uses_less_than_10_requests,
         ]
     )
 
@@ -253,28 +262,16 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             ]
         )
 
-    if (responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json) or (
-        responses["dns_mx_response_fld"] and "Answer" in responses["dns_mx_response_fld"].json
-    ):
-        checks.extend(
-            [
-                check_spf_record_should_exist,
-                check_spf_dns_record_does_not_exist,
-                check_spf_txt_record_should_disallow_all,
-                check_dmarc_record_should_exist,
-                check_dmarc_record_should_reject_failures,
-                check_spf_uses_less_than_10_requests,
-            ]
-        )
-
     if fuzz:
-        checks.append(check_swagger_should_not_return_200)
+        checks.extend([
+            check_swagger_should_not_return_200,
+        ])
 
     extra_args["print_output"] = not hide_output
 
     results = []
     for c in checks:
-        result = c(responses, domain=domain, **extra_args)
+        result = c(responses, domain=domain, domain_with_no_path=domain_with_no_path, **extra_args)
         if result:
             results.append(result)
 

@@ -85,7 +85,7 @@ def check_spf_uses_less_than_10_requests(responses, **kwargs):
     records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
 
     if not records and "dns_txt_response_fld" in responses:
-        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if "data" in r]
+        records = [r["data"] for r in responses["dns_txt_response_fld"].json.get("Answer", []) if "data" in r and r["data"].startswith("v=spf")]
 
     additional_lookups = []
     for record in records:
@@ -141,3 +141,38 @@ def check_dmarc_record_should_reject_failures(responses, **kwargs):
         "email_dmarc_none",
         **kwargs,
     )
+
+
+# Check: SPF should be "v=spf1 -all" if there are no MX records or MX record is "."
+def check_spf_dash_all(responses, **kwargs):
+    # return none if there is an mx record
+    mx_records = []
+    if responses["dns_mx_response"] and "Answer" in responses["dns_mx_response"].json:
+        mx_records.extend(responses["dns_mx_response"].json["Answer"])
+
+    if "dns_mx_response_fld" in responses and "Answer" in responses["dns_mx_response_fld"].json:
+        mx_records.extend(responses["dns_mx_response_fld"].json["Answer"])
+
+    mx_record_data = [r["data"] for r in mx_records]
+
+    if len(mx_record_data) == 0 or all([r == "0 ." for r in mx_record_data]):
+        spf_records = [r["data"] for r in responses["dns_txt_response"].json.get("Answer", []) if r["data"].startswith("v=spf")]
+
+        if spf_records:
+            spf_record = spf_records[0]
+        else:
+            spf_record = ""
+
+        return result(
+            spf_record.lower().strip() == "v=spf1 -all",
+            f"SPF should be 'v=spf1 -all' if there are no MX records or MX record is '.' ({spf_record})",
+            "email_spf_disallow_all_with_empty_mx",
+            **kwargs
+        )
+    else:
+        return result(
+            True,
+            f"SPF should be 'v=spf1 -all' if there are no MX records or MX record is '.' (MX records exist: {mx_record_data})",
+            "email_spf_disallow_all_with_empty_mx",
+            **kwargs
+        )
