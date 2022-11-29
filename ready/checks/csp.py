@@ -131,7 +131,13 @@ def check_csp_should_only_include_valid_directives(responses, **kwargs):
     directives = []
 
     if csp:
-        directives = [x.split()[0] for x in csp.split(";") if x]
+        for directive in csp.split(';'):
+            directive = directive.strip()
+
+            if ' ' in directive:
+                directives.append(directive.split()[0])
+            else:
+                directives.append(directive.strip())
 
     valid_directives = [
         "base-uri",
