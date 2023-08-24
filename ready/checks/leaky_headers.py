@@ -57,6 +57,7 @@ LEAKY_HEADERS = [
     "via",
 ]
 
+
 # Check: Headers that leak information should not be in the response
 def check_should_not_include_leaky_headers(responses, **kwargs):
     leaky = [x for x in LEAKY_HEADERS if re.search(r"\d\.\d", responses["response"].headers.get(x, "")) != None]

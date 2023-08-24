@@ -1,8 +1,8 @@
 import re
 
+from ready import thttp
 from ready.checks.csp import extract_csp
 from ready.result import result
-from ready import thttp
 
 
 # Check: Permissions-Policy should exist if the response is HTML

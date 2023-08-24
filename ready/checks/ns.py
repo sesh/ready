@@ -1,5 +1,6 @@
 from ready.result import result
 
+
 # Check: At least two nameservers should be configured
 def check_at_least_two_nameservers_configured(responses, **kwargs):
     nameservers = [x["data"] for x in responses["dns_ns_response"].json.get("Answer", [])]

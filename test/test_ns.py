@@ -1,5 +1,6 @@
-from ready.checks.ns import check_at_least_two_nameservers_configured
 from unittest import TestCase
+
+from ready.checks.ns import check_at_least_two_nameservers_configured
 from ready.thttp import Response
 
 

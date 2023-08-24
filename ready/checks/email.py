@@ -1,7 +1,8 @@
-from ready.result import result
-import re
 import json
+import re
+
 from ready import thttp
+from ready.result import result
 
 
 # Check: SPF TXT record should exist
@@ -62,7 +63,7 @@ def _spf_for_domain(domain, depth=0, lookups=[]):
 
     results = [x for x in spf_records]
 
-    for (_, record) in spf_records:
+    for _, record in spf_records:
         depth += 1
         if depth > 13:
             return results

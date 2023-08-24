@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from ready.checks.csp import extract_csp
 from ready.thttp import Response
 

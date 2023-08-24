@@ -1,9 +1,20 @@
-import json
-import sys
-import os
 import datetime
+import json
+import os
+import sys
 import urllib
 
+from ready.checks.bad_response import (
+    check_bad_response_cloudflare,
+    check_bad_response_kasada,
+)
+from ready.checks.content import (
+    check_http_cache_control_is_included,
+    check_http_content_type_header_contains_charset,
+    check_http_expires_header_is_not_set,
+    check_http_response_should_be_gzipped,
+    check_http_response_should_include_content_type,
+)
 from ready.checks.cookies import (
     check_cookies_should_be_httponly,
     check_cookies_should_be_samesite,
@@ -14,30 +25,26 @@ from ready.checks.corp_coop_coep import (
     check_cross_origin_opener_policy_should_be_sameorigin,
     check_cross_origin_resource_policy_should_be_sameorigin,
 )
-
 from ready.checks.csp import (
+    check_csp_must_not_include_unsafe_eval,
     check_csp_must_not_include_unsafe_inline,
     check_csp_should_exist,
-    check_csp_should_include_reporturi,
     check_csp_should_include_reportto,
+    check_csp_should_include_reporturi,
     check_csp_should_only_include_valid_directives,
     check_csp_should_start_with_defaultsrc_none,
     check_csp_upgrade_insecure_requests,
-    check_csp_must_not_include_unsafe_eval,
 )
-
 from ready.checks.dns import check_aaaa_record_exists
-
 from ready.checks.email import (
     check_dmarc_record_should_exist,
     check_dmarc_record_should_reject_failures,
+    check_spf_dash_all,
     check_spf_dns_record_does_not_exist,
     check_spf_record_should_exist,
     check_spf_txt_record_should_disallow_all,
     check_spf_uses_less_than_10_requests,
-    check_spf_dash_all,
 )
-
 from ready.checks.hsts import (
     check_hsts_header_should_be_included_in_response,
     check_hsts_header_should_have_a_long_max_age,
@@ -45,6 +52,7 @@ from ready.checks.hsts import (
     check_hsts_header_should_have_preload,
 )
 from ready.checks.html import (
+    check_cdns_should_not_be_used,
     check_frame_ancestors_should_exist,
     check_html_includes_rel_icon,
     check_html_includes_title,
@@ -55,44 +63,31 @@ from ready.checks.html import (
     check_html_tag_includes_lang,
     check_permissions_policy_should_exist,
     check_referrer_policy_should_be_set,
-    check_x_content_type_options_should_be_nosniff,
-    check_x_xss_protection_should_not_exist,
-    check_x_dns_prefetch_control_is_off,
-    check_cdns_should_not_be_used,
     check_rss_should_return_cors_header,
+    check_x_content_type_options_should_be_nosniff,
+    check_x_dns_prefetch_control_is_off,
+    check_x_xss_protection_should_not_exist,
 )
 from ready.checks.leaky_headers import check_should_not_include_leaky_headers
+from ready.checks.ns import check_at_least_two_nameservers_configured
+from ready.checks.redirect import check_http_to_https_redirect
 from ready.checks.report_to import check_report_to_header_should_be_included_in_response
 from ready.checks.ssl import (
+    check_dns_caa_record_should_exist,
     check_ssl_certificate_should_be_trusted,
+    check_ssl_connection_fails_with_tls_1_0,
+    check_ssl_connection_fails_with_tls_1_1,
     check_ssl_expiry_should_be_greater_than_five_days,
     check_ssl_expiry_should_be_less_than_one_year,
-    check_dns_caa_record_should_exist,
-    check_ssl_connection_fails_with_tls_1_1,
-    check_ssl_connection_fails_with_tls_1_0,
 )
-
 from ready.checks.status import check_http_response_should_be_200
-from ready.checks.redirect import check_http_to_https_redirect
-from ready.checks.content import (
-    check_http_cache_control_is_included,
-    check_http_content_type_header_contains_charset,
-    check_http_expires_header_is_not_set,
-    check_http_response_should_be_gzipped,
-    check_http_response_should_include_content_type,
-)
+from ready.checks.swagger import check_swagger_should_not_return_200
 from ready.checks.well_known import (
     check_favicon_is_served,
     check_robots_txt_exists,
     check_security_txt_exists,
 )
-from ready.checks.ns import check_at_least_two_nameservers_configured
-
-from ready.checks.swagger import check_swagger_should_not_return_200
-
-from ready.checks.bad_response import check_bad_response_kasada, check_bad_response_cloudflare
-
-from ready.thttp import request, pretty
+from ready.thttp import pretty, request
 
 USE_FLD = True
 

@@ -1,9 +1,8 @@
 import re
 from urllib.parse import urljoin
 
-from ready.thttp import request
 from ready.result import result
-
+from ready.thttp import request
 
 SWAGGER_PATHS = [
     "core/latest/swagger-ui/index.html",
@@ -21,6 +20,7 @@ SWAGGER_PATHS = [
     "swagger/v1/swagger.json",
     "swaggerui",
 ]
+
 
 # Check: Swagger URLs should not return 200 (requires --fuzz)
 def check_swagger_should_not_return_200(responses, **kwargs):

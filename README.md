@@ -17,7 +17,7 @@ For more, check out `--help`.
 There are no required dependencies, but two optional dependencies that enable some additional behaviour:
 
 - Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is particularly handy if you need to check a subdomain.
-- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document instead of the headers. This can be common on sites that use static hosting like Github Pages.
+- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document as well as the headers. This can be used for sites that use static hosting like Github Pages.
 
 
 ## Check list
