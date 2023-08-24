@@ -133,3 +133,40 @@ def check_dns_caa_record_should_exist(responses, **kwargs):
         "ssl_dns_caa",
         **kwargs,
     )
+
+
+# Check: DNS CAA should include accounturi
+def check_dns_css_record_should_include_accounturi(responses, **kwargs):
+    records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r]
+
+    if not records and "dns_caa_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r]
+
+    # filter to just the issue records
+    records = [r for r in records if "issue " in r]
+
+    return result(
+        records and all(["accounturi=" in r for r in records]),
+        f"DNS CAA should include accounturi ({records})",
+        "ssl_dns_caa_accounturi",
+        warn_on_fail=True,
+        **kwargs,
+    )
+
+# Check: DNS CAA should include validationmethods
+def check_dns_css_record_should_include_validationmethods(responses, **kwargs):
+    records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r]
+
+    if not records and "dns_caa_response_fld" in responses:
+        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r]
+
+    # filter to just the issue records
+    records = [r for r in records if "issue " in r]
+
+    return result(
+        records and all(["validationmethods=" in r for r in records]),
+        f"DNS CAA should include validationmethods ({records})",
+        "ssl_dns_caa_validationmethods",
+        warn_on_fail=True,
+        **kwargs,
+    )

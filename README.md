@@ -73,6 +73,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - SPF includes use less than 10 DNS requests
 - DMARC record should exist
 - DMARC record should contain p=reject
+- SPF should be "v=spf1 -all" if there are no MX records or MX record is "."
 - Robots.txt exists and is a text file
 - Security.txt exists and is a text file that contains required attributes
 - Favicon is served at /favicon.ico
@@ -83,7 +84,10 @@ There are no required dependencies, but two optional dependencies that enable so
 - SSL connection fails when using TLS 1.1
 - SSL connection fails when using TLS 1.0
 - DNS CAA should be enabled
+- DNS CAA should include accounturi
+- DNS CAA should include validationmethods
 - Response should be a 200 (after redirects)
+
 
 
 ### Potential / WIP
