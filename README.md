@@ -52,6 +52,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - Content-Security-Policy header should start with default-src 'none'
 - Content-Security-Policy header must not include unsafe-inline
 - Content-Security-Policy header must not include unsafe-eval
+- Content-Security-Policy header must not include report-sample
 - Content-Security-Policy header should include report-uri
 - Content-Security-Policy header should include report-to
 - Content-Security-Policy header should include upgrade-insecure-requests

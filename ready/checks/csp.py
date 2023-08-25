@@ -85,6 +85,18 @@ def check_csp_must_not_include_unsafe_inline(responses, **kwargs):
     )
 
 
+# Check: Content-Security-Policy header must not include report-sample
+def check_csp_must_not_include_report_sample(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        csp != None and "script-sample" not in csp,
+        f"Content-Security-Policy header must not include report-sample ({_trunc(csp)})",
+        "csp_no_report_sample",
+        **kwargs,
+    )
+
+
 # Check: Content-Security-Policy header should include report-uri
 # NOTE: report-uri is being replaced by report-to but browser support is spotty so report-uri should still exist
 def check_csp_should_include_reporturi(responses, **kwargs):
