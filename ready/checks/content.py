@@ -31,11 +31,11 @@ def check_http_content_type_header_contains_charset(responses, **kwargs):
     )
 
 
-# Check: Expires header is depreciated and should not be returned
+# Check: Expires header is deprecated and should not be returned
 def check_http_expires_header_is_not_set(responses, **kwargs):
     return result(
         "expires" not in responses["response"].headers,
-        f"Expires header is depreciated and should not be returned ({responses['response'].headers.get('expires')})",
+        f"Expires header is deprecated and should not be returned ({responses['response'].headers.get('expires')})",
         "http_expires",
         **kwargs,
     )
@@ -47,5 +47,15 @@ def check_http_cache_control_is_included(responses, **kwargs):
         "cache-control" in responses["response"].headers,
         f"Cache-Control header should be included in the response ({responses['response'].headers.get('cache-control')})",
         "http_expires",
+        **kwargs,
+    )
+
+
+# Check: P3P header is deprecated and should not be returned
+def check_http_p3p_header_is_not_set(responses, **kwargs):
+    return result(
+        "p3p" not in responses["response"].headers,
+        f"P3P header is deprecated and should not be returned ({responses['response'].headers.get('p3p')})",
+        "http_p3p",
         **kwargs,
     )

@@ -14,6 +14,7 @@ from ready.checks.content import (
     check_http_expires_header_is_not_set,
     check_http_response_should_be_gzipped,
     check_http_response_should_include_content_type,
+    check_http_p3p_header_is_not_set,
 )
 from ready.checks.cookies import (
     check_cookies_should_be_httponly,
@@ -217,6 +218,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_http_content_type_header_contains_charset,
             check_http_expires_header_is_not_set,
             check_http_cache_control_is_included,
+            check_http_p3p_header_is_not_set,
             check_referrer_policy_should_be_set,
             check_cross_origin_resource_policy_should_be_sameorigin,
             check_cross_origin_opener_policy_should_be_sameorigin,

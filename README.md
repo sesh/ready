@@ -67,8 +67,9 @@ There are no required dependencies, but two optional dependencies that enable so
 - Response should include a Content-Type
 - Response should be gzipped
 - Content-Type header should contain charset
-- Expires header is depreciated and should not be returned
+- Expires header is deprecated and should not be returned
 - Cache-Control header should be included in the response
+- P3P header is deprecated and should not be returned
 - SPF TXT record should exist
 - SPF TXT record should contain "-all"
 - SPF DNS record is depreciated and should not exist
@@ -123,6 +124,8 @@ Some things are best left to other tools, or are generally handled in other ways
 This tool overlaps with a bunch of other online site checking tool.
 I use these ones on a regular basis (and recommend them):
 
+- https://webhint.io/
+- https://pagespeed.web.dev/
 - https://internet.nl/
 - https://www.ssllabs.com/ssltest/
 - https://securityheaders.com/
