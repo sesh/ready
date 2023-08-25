@@ -218,8 +218,9 @@ def check_rss_should_return_cors_header(responses, **kwargs):
         elif url.startswith("/"):
             url = responses["response"].url.rstrip("/") + url
 
-        response = thttp.request(url)
-        cors_values.append(response.headers.get("access-control-allow-origin"))
+        if url.startswith("http"):
+            response = thttp.request(url)
+            cors_values.append(response.headers.get("access-control-allow-origin"))
 
     return result(
         all([x is not None for x in cors_values]),
