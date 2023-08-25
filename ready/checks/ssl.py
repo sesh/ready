@@ -153,6 +153,7 @@ def check_dns_css_record_should_include_accounturi(responses, **kwargs):
         **kwargs,
     )
 
+
 # Check: DNS CAA should include validationmethods
 def check_dns_css_record_should_include_validationmethods(responses, **kwargs):
     records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r]

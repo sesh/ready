@@ -126,6 +126,25 @@ def check_html_should_not_use_schemeless_urls(responses, **kwargs):
     )
 
 
+# Check: HTML should not use unnecessary HTML entities
+def check_html_should_not_use_unnecessary_entities(responses, **kwargs):
+    allow_list = [b"nbsp", b"amp", b"quot", b"lt", b"gt"]
+
+    # The longest entity on the registered entity list is "CounterClockwiseContourIntegral"
+    # https://html.spec.whatwg.org/entities.json
+    entities = re.findall(b"&([\w#]{1,32});", responses["response"].content)
+    entities = [e for e in entities if e not in allow_list]
+
+    return result(
+        len(entities) == 0,
+        f"HTML should not use unnecessary HTML entities ({[e.decode() for e in set(entities)]})",
+        "html_unnecessary_entities",
+        warn_on_fail=True,
+        **kwargs,
+    )
+    print(entities)
+
+
 # Check: All script tags should use subresource integrity
 def check_html_script_tags_use_sri(responses, **kwargs):
     script_tags = re.findall(b"<script ([^\>]+)", responses["response"].content)

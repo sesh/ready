@@ -43,6 +43,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - HTML should include `<title>`
 - HTML should include link with rel="icon"
 - HTML should not use schemeless urls for links or hrefs
+- HTML should not use unnecessary HTML entities
 - All script tags should use subresource integrity
 - X-DNS-Prefetch-Control should be set to off
 - CDNs should not be used for Javascript or CSS assets
@@ -87,7 +88,6 @@ There are no required dependencies, but two optional dependencies that enable so
 - DNS CAA should include accounturi
 - DNS CAA should include validationmethods
 - Response should be a 200 (after redirects)
-
 
 
 ### Potential / WIP
