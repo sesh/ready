@@ -48,6 +48,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - X-DNS-Prefetch-Control should be set to off
 - CDNs should not be used for Javascript or CSS assets
 - RSS and JSON feeds should return Access-Control-Allow-Origin header
+- Cache-Control max-age should be <= 86400 for HTML documents
 - Content-Security-Policy header should exist
 - Content-Security-Policy header should start with default-src 'none'
 - Content-Security-Policy header must not include unsafe-inline

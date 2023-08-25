@@ -227,3 +227,33 @@ def check_rss_should_return_cors_header(responses, **kwargs):
         "feeds_cors_enabled",
         **kwargs,
     )
+
+
+# Check: Cache-Control max-age should be <= 86400 for HTML documents
+def check_html_should_not_be_cached_for_more_than_24_hours(responses, **kwargs):
+    cc_header = responses["response"].headers.get("cache-control", "")
+    error = "no Cache-Control header"
+
+    if "max-age=" in cc_header:
+        max_age = re.search("max-age=(?P<age>\d+)", cc_header)
+        if max_age:
+            try:
+                age = int(max_age.group("age"))
+                return result(
+                    age <= 86400,
+                    f"Cache-Control max-age should be <= 86400 for HTML documents (parse error: {cc_header})",
+                    "html_cache_duration",
+                    **kwargs,
+                )
+            except ValueError:
+                error = f"parse error: {cc_header}"
+        else:
+            error = f"match error: {cc_header}"
+
+    return result(
+        False,
+        f"Cache-Control max-age should be <= 86400 for HTML documents ({error})",
+        "html_cache_duration",
+        warn_on_fail=True,
+        **kwargs,
+    )

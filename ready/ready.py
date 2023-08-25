@@ -70,6 +70,7 @@ from ready.checks.html import (
     check_x_content_type_options_should_be_nosniff,
     check_x_dns_prefetch_control_is_off,
     check_x_xss_protection_should_not_exist,
+    check_html_should_not_be_cached_for_more_than_24_hours,
 )
 from ready.checks.leaky_headers import check_should_not_include_leaky_headers
 from ready.checks.ns import check_at_least_two_nameservers_configured
@@ -261,6 +262,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
                 check_html_should_not_use_schemeless_urls,
                 check_html_script_tags_use_sri,
                 check_html_should_not_use_unnecessary_entities,
+                check_html_should_not_be_cached_for_more_than_24_hours,
                 check_x_dns_prefetch_control_is_off,
                 check_cdns_should_not_be_used,
                 check_rss_should_return_cors_header,
