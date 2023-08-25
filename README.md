@@ -51,6 +51,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - Cache-Control max-age should be <= 86400 for HTML documents
 - Content-Security-Policy header should exist
 - Content-Security-Policy header should start with default-src 'none'
+- Content-Security-Policy must include either default-src or script-src
 - Content-Security-Policy header must not include unsafe-inline
 - Content-Security-Policy header must not include unsafe-eval
 - Content-Security-Policy header must not include report-sample

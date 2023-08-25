@@ -60,6 +60,18 @@ def check_csp_should_start_with_defaultsrc_none(responses, **kwargs):
     )
 
 
+# Check: Content-Security-Policy must include either default-src or script-src
+def check_csp_includes_default_or_script_directive(responses, **kwargs):
+    csp = extract_csp(responses["response"])
+
+    return result(
+        "default-src" in csp or "script-src" in csp,
+        f"Content-Security-Policy must include either default-src or script-src ({_trunc(csp)})",
+        "csp_required_directives",
+        **kwargs,
+    )
+
+
 # Check: Content-Security-Policy header must not include unsafe-inline
 # NOTE: this checks everywhere, not just in script-src
 def check_csp_must_not_include_unsafe_eval(responses, **kwargs):

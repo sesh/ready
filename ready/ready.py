@@ -27,6 +27,7 @@ from ready.checks.corp_coop_coep import (
     check_cross_origin_resource_policy_should_be_sameorigin,
 )
 from ready.checks.csp import (
+    check_csp_includes_default_or_script_directive,
     check_csp_must_not_include_unsafe_eval,
     check_csp_must_not_include_unsafe_inline,
     check_csp_must_not_include_report_sample,
@@ -204,6 +205,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_hsts_header_should_have_preload,
             check_csp_should_exist,
             check_csp_should_start_with_defaultsrc_none,
+            check_csp_includes_default_or_script_directive,
             check_csp_must_not_include_unsafe_inline,
             check_csp_must_not_include_unsafe_eval,
             check_csp_must_not_include_report_sample,
