@@ -65,7 +65,7 @@ def check_csp_includes_default_or_script_directive(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
     return result(
-        "default-src" in csp or "script-src" in csp,
+        csp != None and ("default-src" in csp or "script-src" in csp),
         f"Content-Security-Policy must include either default-src or script-src ({_trunc(csp)})",
         "csp_required_directives",
         **kwargs,
