@@ -1,8 +1,16 @@
 import re
+from urllib.parse import urljoin
 
 from ready import thttp
 from ready.checks.csp import extract_csp
 from ready.result import result
+
+USE_BS4 = True
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    USE_BS4 = False
 
 
 # Check: Permissions-Policy should exist if the response is HTML
@@ -194,40 +202,47 @@ def check_cdns_should_not_be_used(responses, **kwargs):
 
 # Check: RSS and JSON feeds should return Access-Control-Allow-Origin header
 def check_rss_should_return_cors_header(responses, **kwargs):
-    feed_types = [
-        "application/rss+xml",
-        "application/feed+json",
-    ]
+    if USE_BS4:
+        feed_urls = []
+        feed_types = [
+            "application/rss+xml",
+            "application/feed+json",
+        ]
 
-    link_tags = re.findall(b"<link (.+)>", responses["response"].content)
-    feed_urls = []
+        soup = BeautifulSoup(responses["response"].content, features="html.parser")
 
-    for tag in link_tags:
-        tag = tag.decode().replace("'", '"')
-        if 'rel="alternate"' in tag:
-            if any([f in tag for f in feed_types]):
-                link = re.search('href\="(.+)"', tag)
-                if link:
-                    url = link.groups()[0]
-                    feed_urls.append(url)
+        links = soup.find_all("link")
 
-    cors_values = []
-    for url in feed_urls:
-        if url.startswith("//"):
-            url = "https:" + url
-        elif url.startswith("/"):
-            url = responses["response"].url.rstrip("/") + url
+        for link in links:
+            if "alternate" in link.attrs.get("rel", ""):
+                if link.attrs.get("type", "") in feed_types:
+                    feed_urls.append(urljoin(responses["response"].url, link.attrs.get("href")))
 
-        if url.startswith("http"):
-            response = thttp.request(url)
-            cors_values.append(response.headers.get("access-control-allow-origin"))
+        cors_values = []
+        for url in feed_urls:
+            if url.startswith("//"):
+                url = "https:" + url
+            elif url.startswith("/"):
+                url = responses["response"].url.rstrip("/") + url
 
-    return result(
-        all([x is not None for x in cors_values]),
-        f"RSS and JSON feeds should return Access-Control-Allow-Origin header ({', '.join(feed_urls) if feed_urls else 'no feeds'})",
-        "feeds_cors_enabled",
-        **kwargs,
-    )
+            if url.startswith("http"):
+                response = thttp.request(url)
+                cors_values.append(response.headers.get("access-control-allow-origin"))
+
+        return result(
+            all([x is not None for x in cors_values]),
+            f"RSS and JSON feeds should return Access-Control-Allow-Origin header ({', '.join(feed_urls) if feed_urls else 'no feeds'})",
+            "feeds_cors_enabled",
+            **kwargs,
+        )
+    else:
+        return result(
+            False,
+            f"RSS and JSON feeds should return Access-Control-Allow-Origin header (skipped because beautifulsoup is missing)",
+            "feeds_cors_enabled",
+            warn_on_fail=True,
+            **kwargs,
+        )
 
 
 # Check: Cache-Control max-age should be <= 86400 for HTML documents

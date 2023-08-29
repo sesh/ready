@@ -4,8 +4,6 @@ USE_BS4 = True
 
 try:
     from bs4 import BeautifulSoup
-
-    USE_BS4 = True
 except ImportError:
     USE_BS4 = False
 

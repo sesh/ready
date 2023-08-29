@@ -12,9 +12,9 @@ from ready.checks.content import (
     check_http_cache_control_is_included,
     check_http_content_type_header_contains_charset,
     check_http_expires_header_is_not_set,
+    check_http_p3p_header_is_not_set,
     check_http_response_should_be_gzipped,
     check_http_response_should_include_content_type,
-    check_http_p3p_header_is_not_set,
 )
 from ready.checks.cookies import (
     check_cookies_should_be_httponly,
@@ -28,9 +28,9 @@ from ready.checks.corp_coop_coep import (
 )
 from ready.checks.csp import (
     check_csp_includes_default_or_script_directive,
+    check_csp_must_not_include_report_sample,
     check_csp_must_not_include_unsafe_eval,
     check_csp_must_not_include_unsafe_inline,
-    check_csp_must_not_include_report_sample,
     check_csp_should_exist,
     check_csp_should_include_reportto,
     check_csp_should_include_reporturi,
@@ -61,17 +61,17 @@ from ready.checks.html import (
     check_html_includes_title,
     check_html_meta_charset,
     check_html_script_tags_use_sri,
+    check_html_should_not_be_cached_for_more_than_24_hours,
     check_html_should_not_use_schemeless_urls,
+    check_html_should_not_use_unnecessary_entities,
     check_html_starts_with_doctype,
     check_html_tag_includes_lang,
-    check_html_should_not_use_unnecessary_entities,
     check_permissions_policy_should_exist,
     check_referrer_policy_should_be_set,
     check_rss_should_return_cors_header,
     check_x_content_type_options_should_be_nosniff,
     check_x_dns_prefetch_control_is_off,
     check_x_xss_protection_should_not_exist,
-    check_html_should_not_be_cached_for_more_than_24_hours,
 )
 from ready.checks.leaky_headers import check_should_not_include_leaky_headers
 from ready.checks.ns import check_at_least_two_nameservers_configured
@@ -79,13 +79,13 @@ from ready.checks.redirect import check_http_to_https_redirect
 from ready.checks.report_to import check_report_to_header_should_be_included_in_response
 from ready.checks.ssl import (
     check_dns_caa_record_should_exist,
+    check_dns_css_record_should_include_accounturi,
+    check_dns_css_record_should_include_validationmethods,
     check_ssl_certificate_should_be_trusted,
     check_ssl_connection_fails_with_tls_1_0,
     check_ssl_connection_fails_with_tls_1_1,
     check_ssl_expiry_should_be_greater_than_five_days,
     check_ssl_expiry_should_be_less_than_one_year,
-    check_dns_css_record_should_include_accounturi,
-    check_dns_css_record_should_include_validationmethods,
 )
 from ready.checks.status import check_http_response_should_be_200
 from ready.checks.swagger import check_swagger_should_not_return_200
