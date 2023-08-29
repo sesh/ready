@@ -68,7 +68,7 @@ jobs:
         coverage report -m
         coverage json
         jq '.totals.percent_covered' coverage.json > coverage.txt
-        http post https://delta-v.club/delta/ce54461a-55f2-4492-a567-b0e8b734dc4d/track value=$(cat coverage.txt) --ignore-stdin
+        cat coverage.txt
 
   bandit:
     runs-on: ubuntu-latest
