@@ -91,6 +91,7 @@ There are no required dependencies, but two optional dependencies that enable so
 - DNS CAA should be enabled
 - DNS CAA should include accounturi
 - DNS CAA should include validationmethods
+- SSL certificate should provide OCSP URI
 - Response should be a 200 (after redirects)
 
 

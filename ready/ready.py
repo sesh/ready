@@ -84,6 +84,7 @@ from ready.checks.ssl import (
     check_ssl_connection_fails_with_tls_1_1,
     check_ssl_expiry_should_be_greater_than_five_days,
     check_ssl_expiry_should_be_less_than_one_year,
+    check_ssl_certificate_should_include_ocsp,
     check_dns_css_record_should_include_accounturi,
     check_dns_css_record_should_include_validationmethods,
 )
@@ -232,6 +233,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_ssl_certificate_should_be_trusted,
             check_ssl_connection_fails_with_tls_1_1,
             check_ssl_connection_fails_with_tls_1_0,
+            check_ssl_certificate_should_include_ocsp,
             check_dns_caa_record_should_exist,
             check_dns_css_record_should_include_accounturi,
             check_dns_css_record_should_include_validationmethods,

@@ -36,7 +36,7 @@ def connect_with_specific_protocol(domain, protocol):
         return False
 
 
-def get_ssl_expiry(domain):
+def get_certificate(domain):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(CONNECTION_TIMEOUT)
@@ -47,11 +47,21 @@ def get_ssl_expiry(domain):
         ssl_sock.connect((domain, 443))
 
         cert = ssl_sock.getpeercert()
-        end = datetime.fromtimestamp(ssl.cert_time_to_seconds(cert["notAfter"]))
         ssl_sock.close()
-        return end.date()
+
+        return cert
     except:
         return None
+
+
+def get_ssl_expiry(domain):
+    cert = get_certificate(domain)
+
+    if cert:
+        end = datetime.fromtimestamp(ssl.cert_time_to_seconds(cert["notAfter"]))
+        return end.date()
+
+    return None
 
 
 # Check: SSL certificate should be trusted
@@ -169,5 +179,18 @@ def check_dns_css_record_should_include_validationmethods(responses, **kwargs):
         f"DNS CAA should include validationmethods ({records})",
         "ssl_dns_caa_validationmethods",
         warn_on_fail=True,
+        **kwargs,
+    )
+
+
+# Check: SSL certificate should provide OCSP URI
+def check_ssl_certificate_should_include_ocsp(responses, **kwargs):
+    certificate = get_certificate(kwargs["domain"])
+    ocsp = certificate.get('OCSP', None)
+
+    return result(
+        ocsp and all([("https://" in r or "http://" in r) for r in ocsp]),
+        f"SSL certificate should provide OCSP URI ({ocsp})",
+        "ssl_provide_ocsp",
         **kwargs,
     )
