@@ -107,27 +107,30 @@ def check_csp_must_not_include_report_sample(responses, **kwargs):
     )
 
 
-# Check: Content-Security-Policy header should include report-uri
+# Check: Content-Security-Policy header must not include report-uri
 # NOTE: report-uri is being replaced by report-to but browser support is spotty so report-uri should still exist
-def check_csp_should_include_reporturi(responses, **kwargs):
+def check_csp_must_not_include_reporturi(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
     return result(
-        csp != None and (("report-uri https://" in csp)),
-        f"Content-Security-Policy header should include report-uri ({_trunc(csp)})",
+        csp is None or (("report-uri https://" not in csp)),
+        f"Content-Security-Policy header must not include report-uri ({_trunc(csp)})",
         "csp_report_uri",
-        warn_on_fail=True,
+        warn_on_fail=False,
         **kwargs,
     )
 
 
-# Check: Content-Security-Policy header should include report-to
+# Check: Content-Security-Policy header should not include report-to
 def check_csp_should_include_reportto(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
+    if not csp:
+        csp = ""
+
     return result(
-        csp != None and ("report-to" in csp),
-        f"Content-Security-Policy header should include report-to ({_trunc(csp)})",
+        ("report-to" not in csp),
+        f"Content-Security-Policy header should not include report-to ({_trunc(csp)})",
         "csp_report_to",
         warn_on_fail=True,
         **kwargs,

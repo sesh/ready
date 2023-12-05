@@ -33,7 +33,7 @@ from ready.checks.csp import (
     check_csp_must_not_include_unsafe_inline,
     check_csp_should_exist,
     check_csp_should_include_reportto,
-    check_csp_should_include_reporturi,
+    check_csp_must_not_include_reporturi,
     check_csp_should_only_include_valid_directives,
     check_csp_should_start_with_defaultsrc_none,
     check_csp_upgrade_insecure_requests,
@@ -76,7 +76,7 @@ from ready.checks.html import (
 from ready.checks.leaky_headers import check_should_not_include_leaky_headers
 from ready.checks.ns import check_at_least_two_nameservers_configured
 from ready.checks.redirect import check_http_to_https_redirect
-from ready.checks.report_to import check_report_to_header_should_be_included_in_response
+from ready.checks.report_to import check_report_to_header_must_not_be_included_in_response
 from ready.checks.ssl import (
     check_dns_caa_record_should_exist,
     check_dns_css_record_should_include_accounturi,
@@ -210,10 +210,10 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_csp_must_not_include_unsafe_eval,
             check_csp_must_not_include_report_sample,
             check_csp_upgrade_insecure_requests,
-            check_csp_should_include_reporturi,
+            check_csp_must_not_include_reporturi,
             check_csp_should_include_reportto,
             check_csp_should_only_include_valid_directives,
-            check_report_to_header_should_be_included_in_response,
+            check_report_to_header_must_not_be_included_in_response,
             check_robots_txt_exists,
             check_security_txt_exists,
             check_favicon_is_served,
