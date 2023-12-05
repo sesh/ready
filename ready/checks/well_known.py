@@ -34,7 +34,7 @@ def check_favicon_is_served(responses, **kwargs):
     favicon_response = responses["favicon_response"]
     return result(
         favicon_response.status == 200
-        and favicon_response.headers.get("content-type", "") in ["image/x-icon", "image/vnd.microsoft.icon"],
+        and favicon_response.headers.get("content-type", "").startswith("image/"),
         "Favicon is served at /favicon.ico",
         "wellknown_favicon",
         **kwargs
