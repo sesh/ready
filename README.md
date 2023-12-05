@@ -3,13 +3,27 @@
 
 ## Usage
 
-This package is not (yet) on PyPI, so clone the repo and run it with:
+Install the tool from PyPI with:
+
+```
+pip install ready-check
+```
+
+Running the checks for a domain is as simple as:
+
+```
+ready <domain>
+```
+
+For more, check out `--help`.
+
+### Usage during developer
+
+If you have cloned the repository and would like to run the checks with your local version, simply:
 
 ```
 python3 -m ready.ready <domain>
 ```
-
-For more, check out `--help`.
 
 
 ### Optional Dependencies
@@ -18,6 +32,8 @@ There are no required dependencies, but two optional dependencies that enable so
 
 - Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is particularly handy if you need to check a subdomain.
 - Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document as well as the headers. This can be used for sites that use static hosting like Github Pages.
+
+Note: if you install from PyPI these dependencies are installed.
 
 
 ## Check list
@@ -55,15 +71,15 @@ There are no required dependencies, but two optional dependencies that enable so
 - Content-Security-Policy header must not include unsafe-inline
 - Content-Security-Policy header must not include unsafe-eval
 - Content-Security-Policy header must not include report-sample
-- Content-Security-Policy header should include report-uri
-- Content-Security-Policy header should include report-to
+- Content-Security-Policy header must not include report-uri
+- Content-Security-Policy header should not include report-to
 - Content-Security-Policy header should include upgrade-insecure-requests
 - Content-Security-Policy header only includes valid directives
 - At least two nameservers should be configured
 - Cross-Origin-Resource-Policy should be "same-origin"
 - cross-origin-opener-policy should be "same-origin"
 - Cross-Origin-Embedder-Policy should be "require-corp"
-- Report-To Header should be included in response
+- Report-To Header must not be included in response
 - Response should not contain hints of a Cloudflare captcha page
 - Response should not contain hints of a Kasada error page
 - Response should include a Content-Type
