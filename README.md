@@ -17,9 +17,9 @@ ready <domain>
 
 For more, check out `--help`.
 
-### Usage during developer
+### Usage during development
 
-If you have cloned the repository and would like to run the checks with your local version, simply:
+If you have cloned the repository and would like to run the checks with your local version, simply run:
 
 ```
 python3 -m ready.ready <domain>
@@ -31,7 +31,7 @@ python3 -m ready.ready <domain>
 There are no required dependencies, but two optional dependencies that enable some additional behaviour:
 
 - Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is particularly handy if you need to check a subdomain.
-- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document as well as the headers. This can be used for sites that use static hosting like Github Pages.
+- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document as well as the headers. This technique can be used for sites that use static hosting like Github Pages.
 
 Note: if you install from PyPI these dependencies are installed.
 
@@ -140,8 +140,8 @@ Some things are best left to other tools, or are generally handled in other ways
 
 ## Standard Checks
 
-This tool overlaps with a bunch of other online site checking tool.
-I use these ones on a regular basis (and recommend them):
+This tool overlaps with a bunch of other online site checking tools.
+Here's a few that I have used in the past:
 
 - https://webhint.io/
 - https://pagespeed.web.dev/
@@ -150,6 +150,4 @@ I use these ones on a regular basis (and recommend them):
 - https://securityheaders.com/
 - https://csp-evaluator.withgoogle.com/
 - https://observatory.mozilla.org/
-- https://screenshots.page/ (IPv6 screenshots)
 - https://tools.pingdom.com/
-- https://github.com/raviqqe/muffet (Dead Links)
