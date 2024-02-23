@@ -4,6 +4,10 @@ import os
 import sys
 import urllib
 
+from importlib import resources
+from . import checks as checks_module
+
+
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
     check_bad_response_kasada,
@@ -344,9 +348,9 @@ def cli():
     args = parse_args(sys.argv[1:])
 
     if "--doc" in args:
-        for filename in os.listdir("./ready/checks"):
-            if filename.endswith(".py"):
-                for line in open("./ready/checks/" + filename).readlines():
+        for f in resources.files(checks_module).iterdir():
+            if f.name.endswith(".py"):
+                for line in open(f).readlines():
                     if line.strip().startswith("# Check: "):
                         print(line.strip().replace("# Check: ", "- "))
         sys.exit()
