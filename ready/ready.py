@@ -93,6 +93,7 @@ from ready.checks.well_known import (
     check_favicon_is_served,
     check_robots_txt_exists,
     check_security_txt_exists,
+    check_security_txt_not_expired,
 )
 from ready.thttp import pretty, request
 
@@ -216,6 +217,7 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_report_to_header_must_not_be_included_in_response,
             check_robots_txt_exists,
             check_security_txt_exists,
+            check_security_txt_not_expired,
             check_favicon_is_served,
             check_http_response_should_be_gzipped,
             check_http_content_type_header_contains_charset,
@@ -314,11 +316,9 @@ def score_from_results(results):
 
 def parse_args(args):
     result = {
-        a.split("=")[0]: int(a.split("=")[1])
-        if "=" in a and a.split("=")[1].isnumeric()
-        else a.split("=")[1]
-        if "=" in a
-        else True
+        a.split("=")[0]: (
+            int(a.split("=")[1]) if "=" in a and a.split("=")[1].isnumeric() else a.split("=")[1] if "=" in a else True
+        )
         for a in args
         if "--" in a
     }

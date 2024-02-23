@@ -1,4 +1,5 @@
 from ready.result import result
+from datetime import datetime, timezone
 
 
 # Check: Robots.txt exists and is a text file
@@ -9,7 +10,7 @@ def check_robots_txt_exists(responses, **kwargs):
         robots_response and robots_response.status == 200 and "text/plain" in robots_response.headers.get("content-type", ""),
         "Robots.txt exists and is a text file",
         "wellknown_robots",
-        **kwargs
+        **kwargs,
     )
 
 
@@ -25,7 +26,37 @@ def check_security_txt_exists(responses, **kwargs):
         and b"Expires:" in security_txt_response.content,
         "Security.txt exists and is a text file that contains required attributes",
         "wellknown_security",
-        **kwargs
+        **kwargs,
+    )
+
+
+# Check: Security.txt has an expiry date in the future
+def check_security_txt_not_expired(responses, **kwargs):
+    security_txt_response = responses["security_txt_response"]
+
+    for line in security_txt_response.content.splitlines():
+        line = line.decode()
+
+        if line.strip().startswith("Expires:"):
+            date = line.replace("Expires:", "").strip()
+
+            try:
+                dt = datetime.fromisoformat(date.upper())
+
+                return result(
+                    dt > datetime.utcnow().replace(tzinfo=timezone.utc),
+                    f"Security.txt has an expiry date in the future ({dt})",
+                    "wellknown_security_not_expired",
+                    **kwargs,
+                )
+            except:
+                break
+
+    return result(
+        False,
+        "Security.txt has an expiry date in the future (missing file or expires line)",
+        "wellknown_security_not_expired",
+        **kwargs,
     )
 
 
@@ -36,5 +67,5 @@ def check_favicon_is_served(responses, **kwargs):
         favicon_response.status == 200 and favicon_response.headers.get("content-type", "").startswith("image/"),
         "Favicon is served at /favicon.ico",
         "wellknown_favicon",
-        **kwargs
+        **kwargs,
     )

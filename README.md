@@ -97,6 +97,7 @@ Note: if you install from PyPI these dependencies are installed.
 - SPF should be "v=spf1 -all" if there are no MX records or MX record is "."
 - Robots.txt exists and is a text file
 - Security.txt exists and is a text file that contains required attributes
+- Security.txt has an expiry date in the future
 - Favicon is served at /favicon.ico
 - Headers that leak information should not be in the response
 - SSL certificate should be trusted
