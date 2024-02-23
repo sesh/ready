@@ -83,8 +83,8 @@ from ready.checks.redirect import check_http_to_https_redirect
 from ready.checks.report_to import check_report_to_header_must_not_be_included_in_response
 from ready.checks.ssl import (
     check_dns_caa_record_should_exist,
-    check_dns_css_record_should_include_accounturi,
-    check_dns_css_record_should_include_validationmethods,
+    check_dns_caa_record_should_include_accounturi,
+    check_dns_caa_record_should_include_validationmethods,
     check_ssl_certificate_should_be_trusted,
     check_ssl_connection_fails_with_tls_1_0,
     check_ssl_connection_fails_with_tls_1_1,
@@ -239,8 +239,8 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
             check_ssl_connection_fails_with_tls_1_1,
             check_ssl_connection_fails_with_tls_1_0,
             check_dns_caa_record_should_exist,
-            check_dns_css_record_should_include_accounturi,
-            check_dns_css_record_should_include_validationmethods,
+            check_dns_caa_record_should_include_accounturi,
+            check_dns_caa_record_should_include_validationmethods,
             check_at_least_two_nameservers_configured,
             check_cookies_should_be_samesite,
             check_cookies_should_be_secure,
