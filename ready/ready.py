@@ -133,7 +133,17 @@ def response_or_none(url, name="", request_filter="", **kwargs):
         return None
 
 
-def ready(domain, print_headers=False, print_content=False, json_output=False, hide_output=False, fuzz=False, check_filter=None, request_filter=None, extra_args={}):
+def ready(
+    domain,
+    print_headers=False,
+    print_content=False,
+    json_output=False,
+    hide_output=False,
+    fuzz=False,
+    check_filter=None,
+    request_filter=None,
+    extra_args={},
+):
     domain_with_no_path = urllib.parse.urlparse("https://" + domain).hostname
 
     if USE_FLD:
@@ -169,13 +179,27 @@ def ready(domain, print_headers=False, print_content=False, json_output=False, h
         timeout=3,
     )
 
-    responses["dns_ns_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=NS", "dns_ns_response", request_filter)
-    responses["dns_mx_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=MX", "dns_mx_response", request_filter)
-    responses["dns_txt_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=TXT", "dns_txt_response", request_filter)
-    responses["dns_spf_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=SPF", "dns_spf_response", request_filter)
-    responses["dns_caa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA", "dns_caa_response", request_filter)
-    responses["dns_aaaa_response"] = response_or_none(f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA", "dns_aaaa_response", request_filter)
-    responses["dns_dmarc_response"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT", "dns_dmarc_response", request_filter)
+    responses["dns_ns_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=NS", "dns_ns_response", request_filter
+    )
+    responses["dns_mx_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=MX", "dns_mx_response", request_filter
+    )
+    responses["dns_txt_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=TXT", "dns_txt_response", request_filter
+    )
+    responses["dns_spf_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=SPF", "dns_spf_response", request_filter
+    )
+    responses["dns_caa_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA", "dns_caa_response", request_filter
+    )
+    responses["dns_aaaa_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA", "dns_aaaa_response", request_filter
+    )
+    responses["dns_dmarc_response"] = response_or_none(
+        f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT", "dns_dmarc_response", request_filter
+    )
 
     if USE_FLD and domain != fld:
         responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
@@ -350,7 +374,6 @@ def usage():
     print("  --score        Print a score out of 100 for this domain")
     print("  --doc          Print the list of check names")
 
-
     print("\nDevelopment / experimental options for filtering checks and HTTP requests during testing:")
     print("")
     print("  --check-filter=<x>     Only run checks that match the provided filter")
@@ -380,7 +403,7 @@ def cli():
         hide_output=args.get("--quiet", False),
         fuzz=args.get("--fuzz", False),
         check_filter=args.get("--check-filter", ""),
-        request_filter=args.get("--request-filter", "")
+        request_filter=args.get("--request-filter", ""),
     )
 
     if "--score" in args:

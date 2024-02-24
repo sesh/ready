@@ -122,10 +122,16 @@ def check_ssl_connection_fails_with_tls_1_0(responses, **kwargs):
 # Check: DNS CAA should be enabled
 # https://blog.qualys.com/product-tech/2017/03/13/caa-mandated-by-cabrowser-forum
 def check_dns_caa_record_should_exist(responses, **kwargs):
-    records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+    records = [
+        r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257
+    ]
 
     if not records and "dns_caa_response_fld" in responses:
-        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+        records = [
+            r["data"]
+            for r in responses["dns_caa_response_fld"].json.get("Answer", [])
+            if "data" in r and r.get("type", 0) == 257
+        ]
 
     return result(
         records and all(["issue" in r or "iodef" in r for r in records]),
@@ -137,10 +143,16 @@ def check_dns_caa_record_should_exist(responses, **kwargs):
 
 # Check: DNS CAA should include accounturi
 def check_dns_caa_record_should_include_accounturi(responses, **kwargs):
-    records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+    records = [
+        r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257
+    ]
 
     if not records and "dns_caa_response_fld" in responses:
-        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+        records = [
+            r["data"]
+            for r in responses["dns_caa_response_fld"].json.get("Answer", [])
+            if "data" in r and r.get("type", 0) == 257
+        ]
 
     # filter to just the issue records
     records = [r for r in records if "issue " in r]
@@ -156,10 +168,16 @@ def check_dns_caa_record_should_include_accounturi(responses, **kwargs):
 
 # Check: DNS CAA should include validationmethods
 def check_dns_caa_record_should_include_validationmethods(responses, **kwargs):
-    records = [r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+    records = [
+        r["data"] for r in responses["dns_caa_response"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257
+    ]
 
     if not records and "dns_caa_response_fld" in responses:
-        records = [r["data"] for r in responses["dns_caa_response_fld"].json.get("Answer", []) if "data" in r and r.get("type", 0) == 257]
+        records = [
+            r["data"]
+            for r in responses["dns_caa_response_fld"].json.get("Answer", [])
+            if "data" in r and r.get("type", 0) == 257
+        ]
 
     # filter to just the issue records
     records = [r for r in records if "issue " in r]
