@@ -154,26 +154,38 @@ def ready(
     print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
 
     responses = {
-        "http_response": response_or_none(f"http://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
-        "response": response_or_none(f"https://{domain}", verify=False, headers=DEFAULT_HEADERS, timeout=3),
+        "http_response": response_or_none(
+            f"http://{domain}", "http_response", request_filter, verify=False, headers=DEFAULT_HEADERS, timeout=3
+        ),
+        "response": response_or_none(
+            f"https://{domain}", "response", request_filter, verify=False, headers=DEFAULT_HEADERS, timeout=3
+        ),
     }
 
     if not responses["response"]:
         print(f"No response from https://{domain}")
-        return None
+
+        if request_filter:
+            print("Request filter in place, continuing...")
+        else:
+            return None
 
     responses["security_txt_response"] = response_or_none(
         f"https://{domain_with_no_path}/.well-known/security.txt",
+        "security_txt_response",
+        request_filter,
         headers=DEFAULT_HEADERS,
         timeout=3,
     )
 
     responses["robots_txt_response"] = response_or_none(
-        f"https://{domain_with_no_path}/robots.txt", headers=DEFAULT_HEADERS, timeout=3
+        f"https://{domain_with_no_path}/robots.txt", "robots_txt_response", request_filter, headers=DEFAULT_HEADERS, timeout=3
     )
 
     responses["favicon_response"] = response_or_none(
         f"https://{domain_with_no_path}/favicon.ico",
+        "favicon_response",
+        request_filter,
         verify=False,
         headers=DEFAULT_HEADERS,
         timeout=3,
@@ -210,7 +222,7 @@ def ready(
         responses["dns_caa_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=CAA")
 
     checks = []
-    is_html = "html" in responses["response"].headers.get("content-type", "")
+    is_html = responses["response"] and "html" in responses["response"].headers.get("content-type", "")
 
     # TODO: accept argument to _not_ print to stdout
     if print_headers:
