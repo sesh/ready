@@ -206,6 +206,9 @@ def ready(
     responses["dns_caa_response"] = response_or_none(
         f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA", "dns_caa_response", request_filter
     )
+    responses["dns_a_response"] = response_or_none(
+        f"https://dns.google/resolve?name={domain_with_no_path}&type=A", "dns_aaaa_response", request_filter
+    )
     responses["dns_aaaa_response"] = response_or_none(
         f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA", "dns_aaaa_response", request_filter
     )
@@ -223,6 +226,10 @@ def ready(
 
     checks = []
     is_html = responses["response"] and "html" in responses["response"].headers.get("content-type", "")
+
+    a_records = [x["data"] for x in responses["dns_a_response"].json.get("Answer", [])]
+    aaaa_records = [x["data"] for x in responses["dns_aaaa_response"].json.get("Answer", [])]
+    extra_args["is_ipv6"] = len(a_records) == 0 and len(aaaa_records) > 0
 
     # TODO: accept argument to _not_ print to stdout
     if print_headers:
