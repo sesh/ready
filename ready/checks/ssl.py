@@ -21,10 +21,10 @@ class LookupFailed(Exception):
     pass
 
 
-def connect_with_specific_protocol(domain, protocol):
+def connect_with_specific_protocol(domain, protocol, ipv6=False):
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(CONNECTION_TIMEOUT)
+        sock_type = socket.AF_INET6 if ipv6 else socket.AF_INET
+        sock = socket.socket(sock_type, socket.SOCK_STREAM)
 
         context = ssl.SSLContext(protocol=protocol)
         ssl_sock = context.wrap_socket(sock, server_hostname=domain)
@@ -36,9 +36,10 @@ def connect_with_specific_protocol(domain, protocol):
         return False
 
 
-def get_ssl_expiry(domain):
+def get_ssl_expiry(domain, ipv6=False):
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock_type = socket.AF_INET6 if ipv6 else socket.AF_INET
+        sock = socket.socket(sock_type, socket.SOCK_STREAM)
         sock.settimeout(CONNECTION_TIMEOUT)
 
         context = ssl.create_default_context()
@@ -70,7 +71,7 @@ def check_ssl_certificate_should_be_trusted(responses, **kwargs):
 
 # Check: SSL expiry should be less than one year
 def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
-    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"])
+    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"], ipv6=kwargs["is_ipv6"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
     result(
         ssl_expiry_days and ssl_expiry_days < 366,
@@ -82,7 +83,7 @@ def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
 
 # Check: SSL expiry should be greater than five days
 def check_ssl_expiry_should_be_greater_than_five_days(responses, **kwargs):
-    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"])
+    ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"], ipv6=kwargs["is_ipv6"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
 
     result(
@@ -96,7 +97,7 @@ def check_ssl_expiry_should_be_greater_than_five_days(responses, **kwargs):
 # Check: SSL connection fails when using TLS 1.1
 def check_ssl_connection_fails_with_tls_1_1(responses, **kwargs):
     domain = kwargs["domain"]
-    connection_successful = connect_with_specific_protocol(domain, ssl.PROTOCOL_TLSv1_1)
+    connection_successful = connect_with_specific_protocol(domain, ssl.PROTOCOL_TLSv1_1, ipv6=kwargs["is_ipv6"])
 
     return result(
         not connection_successful,
@@ -109,7 +110,7 @@ def check_ssl_connection_fails_with_tls_1_1(responses, **kwargs):
 # Check: SSL connection fails when using TLS 1.0
 def check_ssl_connection_fails_with_tls_1_0(responses, **kwargs):
     domain = kwargs["domain"]
-    connection_successful = connect_with_specific_protocol(domain, ssl.PROTOCOL_TLSv1)
+    connection_successful = connect_with_specific_protocol(domain, ssl.PROTOCOL_TLSv1, ipv6=kwargs["is_ipv6"])
 
     return result(
         not connection_successful,
