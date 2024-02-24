@@ -15,14 +15,14 @@ Running the checks for a domain is as simple as:
 ready <domain>
 ```
 
-For more, check out `--help`.
+For more options, check the output of `--help`.
 
 ### Usage during development
 
 If you have cloned the repository and would like to run the checks with your local version, simply run:
 
 ```
-python3 -m ready.ready <domain>
+python3 -m ready.ready <domain> [--request-filter=<x>] [--check-filter=<x>]
 ```
 
 
