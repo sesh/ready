@@ -90,7 +90,7 @@ Note: if you install from PyPI these dependencies are installed.
 - P3P header is deprecated and should not be returned
 - SPF TXT record should exist
 - SPF TXT record should contain "-all"
-- SPF DNS record is depreciated and should not exist
+- SPF DNS record is deprecated and should not exist
 - SPF includes use less than 10 DNS requests
 - DMARC record should exist
 - DMARC record should contain p=reject
