@@ -7,6 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
+VERSION = "1.2.3"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
@@ -401,6 +402,10 @@ def usage():
 
 def cli():
     args = parse_args(sys.argv[1:])
+
+    if "--version" in args:
+        print(f"ready {VERSION}")
+        sys.exit()
 
     if "--doc" in args:
         for f in resources.files(checks_module).iterdir():
