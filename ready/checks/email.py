@@ -37,7 +37,7 @@ def check_spf_txt_record_should_disallow_all(responses, **kwargs):
 
 # Check: SPF DNS record is depreciated and should not exist
 def check_spf_dns_record_does_not_exist(responses, **kwargs):
-    records = [r["data"] for r in responses["dns_spf_response"].json.get("Answer", []) if "data" in r]
+    records = [r["data"] for r in responses["dns_spf_response"].json.get("Answer", []) if "data" in r and r["type"] == 99]
 
     if "dns_spf_response_fld" in responses:
         records.extend([r["data"] for r in responses["dns_spf_response_fld"].json.get("Answer", []) if "data" in r])
