@@ -252,12 +252,13 @@ def check_html_should_not_be_cached_for_more_than_24_hours(responses, **kwargs):
 
     if "max-age=" in cc_header:
         max_age = re.search("max-age=(?P<age>\d+)", cc_header)
+
         if max_age:
             try:
                 age = int(max_age.group("age"))
                 return result(
                     age <= 86400,
-                    f"Cache-Control max-age should be <= 86400 for HTML documents (parse error: {cc_header})",
+                    f"Cache-Control max-age should be <= 86400 for HTML documents ({cc_header})",
                     "html_cache_duration",
                     **kwargs,
                 )
