@@ -395,6 +395,7 @@ def usage():
     print("  --quiet        No text output")
     print("  --score        Print a score out of 100 for this domain")
     print("  --doc          Print the list of check names")
+    print("  --version      Print version information")
 
     print("\nDevelopment / experimental options for filtering checks and HTTP requests during testing:")
     print("")
