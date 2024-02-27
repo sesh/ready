@@ -59,21 +59,22 @@ def get_ssl_expiry(domain, ipv6=False):
 def check_ssl_certificate_should_be_trusted(responses, **kwargs):
     try:
         response = request(f'https://{kwargs["domain"]}', verify=True)
-        result(
+        return result(
             True,
             f"SSL certificate should be trusted",
             "ssl_trusted",
             **kwargs,
         )
     except:
-        result(False, f"SSL certificate should be trusted", "ssl_trusted", **kwargs)
+        return result(False, f"SSL certificate should be trusted", "ssl_trusted", **kwargs)
 
 
 # Check: SSL expiry should be less than one year
 def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
     ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"], ipv6=kwargs["is_ipv6"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
-    result(
+
+    return result(
         ssl_expiry_days and ssl_expiry_days < 366,
         f"SSL expiry should be less than one year ({ssl_expiry_days} days)",
         "ssl_expiry_max",
@@ -86,7 +87,7 @@ def check_ssl_expiry_should_be_greater_than_five_days(responses, **kwargs):
     ssl_expiry = get_ssl_expiry(kwargs["domain_with_no_path"], ipv6=kwargs["is_ipv6"])
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
 
-    result(
+    return result(
         ssl_expiry_days and ssl_expiry_days > 5,
         f"SSL expiry should be greater than five days ({ssl_expiry_days} days)",
         "ssl_expiry_min",
