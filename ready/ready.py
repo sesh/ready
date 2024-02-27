@@ -7,7 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
-VERSION = "1.2.4"
+VERSION = "1.2.5"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
@@ -152,7 +152,8 @@ def ready(
     else:
         fld = "Disabled. Install tld if fld is different to domain."
 
-    print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
+    if not hide_output:
+        print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
 
     responses = {
         "http_response": response_or_none(
@@ -357,6 +358,7 @@ def ready(
                         for r in results
                     },
                     "when": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "version": VERSION
                 },
                 indent=2,
             )
