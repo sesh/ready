@@ -358,7 +358,7 @@ def ready(
                         for r in results
                     },
                     "when": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "version": VERSION
+                    "version": VERSION,
                 },
                 indent=2,
             )
