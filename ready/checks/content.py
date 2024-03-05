@@ -40,8 +40,8 @@ def check_http_expires_header_not_used_without_cache_control(responses, **kwargs
     #   - pass if both Expires and Cache-Control are set
     #   - fail in all other scenarios
 
-    expires = responses['response'].headers.get('expires')
-    cache_control = {responses['response'].headers.get('cache-control')}
+    expires = responses["response"].headers.get("expires")
+    cache_control = {responses["response"].headers.get("cache-control")}
 
     check_passed = False
     if not expires or (expires and cache_control):
