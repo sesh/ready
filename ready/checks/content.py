@@ -31,11 +31,25 @@ def check_http_content_type_header_contains_charset(responses, **kwargs):
     )
 
 
-# Check: Expires header is deprecated and should not be returned
-def check_http_expires_header_is_not_set(responses, **kwargs):
+# Check: Expires header should not be used without Cache-Control
+def check_http_expires_header_not_used_without_cache_control(responses, **kwargs):
+    # see: https://github.com/sesh/ready/issues/24
+    # nginx sets Cache-Control and Expires on documents
+    # this test should:
+    #   - pass if Expires is unset
+    #   - pass if both Expires and Cache-Control are set
+    #   - fail in all other scenarios
+
+    expires = responses['response'].headers.get('expires')
+    cache_control = {responses['response'].headers.get('cache-control')}
+
+    check_passed = False
+    if not expires or (expires and cache_control):
+        check_passed = True
+
     return result(
-        "expires" not in responses["response"].headers,
-        f"Expires header is deprecated and should not be returned ({responses['response'].headers.get('expires')})",
+        check_passed,
+        f"Expires header should not be used without Cache-Control (Expires: {expires}, Cache-Control: {cache_control})",
         "http_expires",
         **kwargs,
     )

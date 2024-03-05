@@ -7,7 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
-VERSION = "1.2.7"
+VERSION = "1.3.0"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
@@ -16,7 +16,7 @@ from ready.checks.bad_response import (
 from ready.checks.content import (
     check_http_cache_control_is_included,
     check_http_content_type_header_contains_charset,
-    check_http_expires_header_is_not_set,
+    check_http_expires_header_not_used_without_cache_control,
     check_http_p3p_header_is_not_set,
     check_http_response_should_be_gzipped,
     check_http_response_should_include_content_type,
@@ -153,7 +153,7 @@ def ready(
         fld = "Disabled. Install tld if fld is different to domain."
 
     if not hide_output:
-        print(f"Domain: {domain}, Domain (no path): {domain_with_no_path}, First Level Domain: {fld}")
+        print(f"URL (no scheme): {domain}, Domain (no path): {domain_with_no_path}, Second Level Domain: {fld}")
 
     responses = {
         "http_response": response_or_none(
@@ -274,7 +274,7 @@ def ready(
             check_favicon_is_served,
             check_http_response_should_be_gzipped,
             check_http_content_type_header_contains_charset,
-            check_http_expires_header_is_not_set,
+            check_http_expires_header_not_used_without_cache_control,
             check_http_cache_control_is_included,
             check_http_p3p_header_is_not_set,
             check_referrer_policy_should_be_set,

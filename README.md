@@ -85,7 +85,7 @@ Note: if you install from PyPI these dependencies are installed.
 - Response should include a Content-Type
 - Response should be gzipped
 - Content-Type header should contain charset
-- Expires header is deprecated and should not be returned
+- Expires header should not be used without Cache-Control
 - Cache-Control header should be included in the response
 - P3P header is deprecated and should not be returned
 - SPF TXT record should exist
