@@ -7,7 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
@@ -91,6 +91,7 @@ from ready.checks.ssl import (
     check_ssl_connection_fails_with_tls_1_1,
     check_ssl_expiry_should_be_greater_than_five_days,
     check_ssl_expiry_should_be_less_than_one_year,
+    check_ssl_certificate_must_include_ocsp_uri,
 )
 from ready.checks.status import check_http_response_should_be_200
 from ready.checks.swagger import check_swagger_should_not_return_200
@@ -229,9 +230,11 @@ def ready(
     checks = []
     is_html = responses["response"] and "html" in responses["response"].headers.get("content-type", "")
 
-    a_records = [x["data"] for x in responses["dns_a_response"].json.get("Answer", [])]
-    aaaa_records = [x["data"] for x in responses["dns_aaaa_response"].json.get("Answer", [])]
-    extra_args["is_ipv6"] = len(a_records) == 0 and len(aaaa_records) > 0
+    extra_args["is_ipv6"] = False
+    if responses.get("dns_a_records") and responses.get("dns_aaaa_response"):
+        a_records = [x["data"] for x in responses["dns_a_response"].json.get("Answer", [])]
+        aaaa_records = [x["data"] for x in responses["dns_aaaa_response"].json.get("Answer", [])]
+        extra_args["is_ipv6"] = len(a_records) == 0 and len(aaaa_records) > 0
 
     # TODO: accept argument to _not_ print to stdout
     if print_headers:
@@ -287,6 +290,7 @@ def ready(
             check_ssl_certificate_should_be_trusted,
             check_ssl_connection_fails_with_tls_1_1,
             check_ssl_connection_fails_with_tls_1_0,
+            check_ssl_certificate_must_include_ocsp_uri,
             check_dns_caa_record_should_exist,
             check_dns_caa_record_should_include_accounturi,
             check_dns_caa_record_should_include_validationmethods,
