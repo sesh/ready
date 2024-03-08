@@ -1,4 +1,4 @@
-`ready` is a tool for developers to check how production ready their website.
+🚀 `ready` is a tool for developers to check how production ready their website.
 
 
 ## Usage
@@ -17,6 +17,7 @@ ready <domain>
 
 For more options, check the output of `--help`.
 
+
 ### Usage during development
 
 If you have cloned the repository and would like to run the checks with your local version, simply run:
@@ -25,13 +26,12 @@ If you have cloned the repository and would like to run the checks with your loc
 python3 -m ready.ready <domain> [--request-filter=<x>] [--check-filter=<x>]
 ```
 
-
 ### Optional Dependencies
 
 There are no required dependencies, but two optional dependencies that enable some additional behaviour:
 
-- Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is particularly handy if you need to check a subdomain.
-- Installing `beautifulsoup4` adds support for extracting the Content-Security-Policy from the HTML document as well as the headers. This technique can be used for sites that use static hosting like Github Pages.
+- Installing the `tld` package adds support for using the fully-qualified domain name for some DNS-related checks. This is handy if you want to check a subdomain.
+- Installing `beautifulsoup4` adds support for extracting some headers from the HTML document as well as the headers. This technique can be used for sites that use static hosting like Github Pages.
 
 Note: if you install from PyPI these dependencies are installed.
 
@@ -111,34 +111,8 @@ Note: if you install from PyPI these dependencies are installed.
 - Response should be a 200 (after redirects)
 
 
-### Potential / WIP
 
-- GraphQL introspection is not enabled
-- DNSSEC is supported
-- DKIM is configured
-- SPF must not contain +all or ?all
-- DMARC / SPF configuration when there is no MX record
-- CSP should contain default-src or script-src (there's no XSS protection by default)
-- Detections for different WAFs that might be returning instead of the intended content (Cloudflare, Imperva, Kasada, etc.)
-- DNS TTL should be > 300, this reduces the number of DNS requests clients need to make
-- CSP: default-src or script-src must be set
-- CSP: object-src none must be set
-- Check for source maps in JS
-- HTML: contains viewport
-
-
-## Not in scope
-
-Some things are best left to other tools, or are generally handled in other ways by web development teams.
-
-- Dependency scanning. Use a service to regularly check that you are using the latest version of your dependencies.
-- Vulnerability scanning. This tool doesn't replace a penetration test, or automated penetration testing tools.
-- Scans for specific CMSs (i.e. Wordpress, Drupal, etc.). You know what CMS you are using, and you should run framework/cms specific tools in addition to this.
-- Checking for dead links. Use [`muffet`](https://github.com/raviqqe/muffet) or similar for that one.
-- Scans for specific WAFs (use wafw00f for detection)
-
-
-## Standard Checks
+## Other Tools
 
 This tool overlaps with a bunch of other online site checking tools.
 Here's a few that I have used in the past:
@@ -151,3 +125,4 @@ Here's a few that I have used in the past:
 - https://csp-evaluator.withgoogle.com/
 - https://observatory.mozilla.org/
 - https://tools.pingdom.com/
+- https://web-check.xyz/
