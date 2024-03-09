@@ -7,7 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
@@ -152,7 +152,7 @@ def ready(
     if USE_FLD:
         fld = get_fld(domain, fix_protocol=True)
     else:
-        fld = "Disabled. Install tld if fld is different to domain."
+        fld = "Disabled. Install tld to improve support for subdomains."
 
     if not hide_output:
         print(f"URL (no scheme): {domain}, Domain (no path): {domain_with_no_path}, Second Level Domain: {fld}")
@@ -221,6 +221,10 @@ def ready(
     )
 
     if USE_FLD and domain != fld:
+        responses["response_fld"] = response_or_none(
+            f"https://{fld}", "response_fld", request_filter, verify=False, headers=DEFAULT_HEADERS, timeout=3
+        )
+
         responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
         responses["dns_mx_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=MX")
         responses["dns_spf_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=SPF")
