@@ -120,6 +120,13 @@ DEFAULT_HEADERS = {
     "accept-encoding": "gzip",
 }
 
+DNS_RESOLVERS = {
+    "quad9": "https://dns.quad9.net:5053/dns-query",
+    "google": "https://dns.google/resolve",
+    "doh.li": "https://doh.li/dns-query",
+    "dns.sb": "https://doh.dns.sb/dns-query",
+}
+
 
 def response_or_none(url, name="", request_filter="", **kwargs):
     if request_filter and request_filter not in name:
@@ -145,6 +152,7 @@ def ready(
     fuzz=False,
     check_filter=None,
     request_filter=None,
+    dns_resolver="https://dns.google/resolve",
     extra_args={},
 ):
     domain_with_no_path = urllib.parse.urlparse("https://" + domain).hostname
@@ -196,28 +204,28 @@ def ready(
     )
 
     responses["dns_ns_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=NS", "dns_ns_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=NS", "dns_ns_response", request_filter
     )
     responses["dns_mx_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=MX", "dns_mx_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=MX", "dns_mx_response", request_filter
     )
     responses["dns_txt_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=TXT", "dns_txt_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=TXT", "dns_txt_response", request_filter
     )
     responses["dns_spf_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=SPF", "dns_spf_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=SPF", "dns_spf_response", request_filter
     )
     responses["dns_caa_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=CAA", "dns_caa_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=CAA", "dns_caa_response", request_filter
     )
     responses["dns_a_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=A", "dns_aaaa_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=A", "dns_aaaa_response", request_filter
     )
     responses["dns_aaaa_response"] = response_or_none(
-        f"https://dns.google/resolve?name={domain_with_no_path}&type=AAAA", "dns_aaaa_response", request_filter
+        f"{dns_resolver}?name={domain_with_no_path}&type=AAAA", "dns_aaaa_response", request_filter
     )
     responses["dns_dmarc_response"] = response_or_none(
-        f"https://dns.google/resolve?name=_dmarc.{domain_with_no_path}&type=TXT", "dns_dmarc_response", request_filter
+        f"{dns_resolver}?name=_dmarc.{domain_with_no_path}&type=TXT", "dns_dmarc_response", request_filter
     )
 
     if USE_FLD and domain != fld:
@@ -225,12 +233,12 @@ def ready(
             f"https://{fld}", "response_fld", request_filter, verify=False, headers=DEFAULT_HEADERS, timeout=3
         )
 
-        responses["dns_ns_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=NS")
-        responses["dns_mx_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=MX")
-        responses["dns_spf_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=SPF")
-        responses["dns_txt_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=TXT")
-        responses["dns_dmarc_response_fld"] = response_or_none(f"https://dns.google/resolve?name=_dmarc.{fld}&type=TXT")
-        responses["dns_caa_response_fld"] = response_or_none(f"https://dns.google/resolve?name={fld}&type=CAA")
+        responses["dns_ns_response_fld"] = response_or_none(f"{dns_resolver}?name={fld}&type=NS")
+        responses["dns_mx_response_fld"] = response_or_none(f"{dns_resolver}?name={fld}&type=MX")
+        responses["dns_spf_response_fld"] = response_or_none(f"{dns_resolver}?name={fld}&type=SPF")
+        responses["dns_txt_response_fld"] = response_or_none(f"{dns_resolver}?name={fld}&type=TXT")
+        responses["dns_dmarc_response_fld"] = response_or_none(f"{dns_resolver}?name=_dmarc.{fld}&type=TXT")
+        responses["dns_caa_response_fld"] = response_or_none(f"{dns_resolver}?name={fld}&type=CAA")
 
     checks = []
     is_html = responses["response"] and "html" in responses["response"].headers.get("content-type", "")
@@ -344,6 +352,7 @@ def ready(
         )
 
     extra_args["print_output"] = not hide_output
+    extra_args["dns_resolver"] = dns_resolver
 
     results = []
     for c in checks:
@@ -432,6 +441,18 @@ def cli():
         usage()
         sys.exit()
 
+    resolver_name = args.get("--dns-resolver", "google")
+    if not resolver_name.startswith("http"):
+        if resolver_name.lower() in DNS_RESOLVERS:
+            dns_resolver = DNS_RESOLVERS[resolver_name.lower()]
+        else:
+            print(
+                f"{resolver_name} is not a valid DNS resolver name. Provide one of {DNS_RESOLVERS.keys()} or a full URI for the DoH resolver."
+            )
+            sys.exit(1)
+    else:
+        dns_resolver = resolver_name
+
     results = ready(
         args["[]"][0],
         print_headers=args.get("--headers", False),
@@ -441,6 +462,7 @@ def cli():
         fuzz=args.get("--fuzz", False),
         check_filter=args.get("--check-filter", ""),
         request_filter=args.get("--request-filter", ""),
+        dns_resolver=dns_resolver,
     )
 
     if "--score" in args:
