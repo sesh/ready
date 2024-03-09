@@ -44,7 +44,7 @@ def check_security_txt_not_expired(responses, **kwargs):
                 dt = datetime.fromisoformat(date.upper())
 
                 return result(
-                    dt > datetime.utcnow().replace(tzinfo=timezone.utc),
+                    dt > datetime.datetime.now(datetime.UTC).replace(tzinfo=timezone.utc),
                     f"Security.txt has an expiry date in the future ({dt})",
                     "wellknown_security_not_expired",
                     **kwargs,
