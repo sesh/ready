@@ -1,5 +1,5 @@
 from ready.result import result
-from datetime import datetime, timezone
+import datetime
 
 
 # Check: Robots.txt exists and is a text file
@@ -41,15 +41,16 @@ def check_security_txt_not_expired(responses, **kwargs):
             date = line.replace("Expires:", "").strip()
 
             try:
-                dt = datetime.fromisoformat(date.upper())
+                dt = datetime.datetime.fromisoformat(date.upper())
 
                 return result(
-                    dt > datetime.datetime.now(datetime.UTC).replace(tzinfo=timezone.utc),
+                    dt > datetime.datetime.now(datetime.UTC).replace(tzinfo=datetime.timezone.utc),
                     f"Security.txt has an expiry date in the future ({dt})",
                     "wellknown_security_not_expired",
                     **kwargs,
                 )
-            except:
+            except Exception as e:
+                print(e)
                 break
 
     return result(

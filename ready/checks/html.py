@@ -145,7 +145,7 @@ def check_html_should_not_use_unnecessary_entities(responses, **kwargs):
 
     return result(
         len(entities) == 0,
-        f"HTML should not use unnecessary HTML entities ({[e.decode() for e in set(entities)]})",
+        f"HTML should not use unnecessary HTML entities ({[e for e in set(entities)]})",
         "html_unnecessary_entities",
         warn_on_fail=True,
         **kwargs,
