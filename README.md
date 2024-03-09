@@ -109,9 +109,8 @@ Note: if you install from PyPI these dependencies are installed.
 - DNS CAA should include accounturi
 - DNS CAA should include validationmethods
 - SSL certificate must provide OCSP URI
+- SSL certificate should provide OCSP must-staple
 - Response should be a 200 (after redirects)
-
-
 
 
 
