@@ -55,7 +55,7 @@ def get_ssl_expiry(domain, ipv6=False):
         return None
 
 
-def get_ssl_certificate(domain, ipv6=False):
+def get_ssl_certificate(domain, ipv6=False, binary=False):
     try:
         sock_type = socket.AF_INET6 if ipv6 else socket.AF_INET
         sock = socket.socket(sock_type, socket.SOCK_STREAM)
@@ -66,7 +66,7 @@ def get_ssl_certificate(domain, ipv6=False):
         ssl_sock.settimeout(CONNECTION_TIMEOUT)
         ssl_sock.connect((domain, 443))
 
-        cert = ssl_sock.getpeercert()
+        cert = ssl_sock.getpeercert(binary_form=binary)
         return cert
     except:
         return None
@@ -212,15 +212,54 @@ def check_dns_caa_record_should_include_validationmethods(responses, **kwargs):
 
 # Check: SSL certificate must provide OCSP URI
 def check_ssl_certificate_must_include_ocsp_uri(responses, **kwargs):
-    certificate = get_ssl_certificate(kwargs["domain"])
+    certificate = get_ssl_certificate(kwargs["domain"], ipv6=kwargs["is_ipv6"])
     if not certificate:
         ocsp = None
     else:
-        ocsp = certificate.get('OCSP', None)
+        ocsp = certificate.get("OCSP", None)
 
     return result(
         ocsp and all([("https://" in r or "http://" in r) for r in ocsp]),
         f"SSL certificate must provide OCSP URI ({ocsp})",
         "ssl_provide_ocsp_uri",
+        **kwargs,
+    )
+
+
+# Check: SSL certificate should provide OCSP must-staple
+def check_ssl_certificate_should_provide_ocsp_must_staple(responses, **kwargs):
+    try:
+        from cryptography import x509
+    except ImportError:
+        return result(
+            False,
+            f"SSL certificate should provide OCSP must-staple (cryptography not installed)",
+            "ssl_ocsp_must_staple",
+            warn_on_fail=True,
+            **kwargs,
+        )
+
+    certificate = get_ssl_certificate(kwargs["domain"], ipv6=kwargs["is_ipv6"], binary=True)
+    if not certificate:
+        return result(
+            False,
+            f"SSL certificate should provide OCSP must-staple (failed to load certificate)",
+            "ssl_ocsp_must_staple",
+            **kwargs,
+        )
+
+    loaded = x509.load_der_x509_certificate(certificate)
+
+    has_must_staple_extension = False
+    for extension in loaded.extensions:
+        # see https://github.com/sesh/ready/issues/15 for details
+        if extension.oid.dotted_string == "1.3.6.1.5.5.7.1.24":
+            has_must_staple_extension = True
+
+    return result(
+        has_must_staple_extension,
+        f"SSL certificate should provide OCSP must-staple ({'missing' if not has_must_staple_extension else 'includes'} extension)",
+        "ssl_ocsp_must_staple",
+        warn_on_fail=True,
         **kwargs,
     )
