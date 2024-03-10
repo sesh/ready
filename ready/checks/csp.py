@@ -4,21 +4,21 @@ USE_BS4 = True
 
 try:
     from bs4 import BeautifulSoup
-except ImportError:
+except ImportError:  # pragma: no cover
     USE_BS4 = False
 
 
 def extract_csp(response):
     if "content-security-policy" in response.headers:
-        return response.headers["content-security-policy"]
+        return response.headers["content-security-policy"].lower()
 
     if USE_BS4:
         soup = BeautifulSoup(response.content, "html.parser")
         meta_tags = soup.find_all("meta")
         for t in meta_tags:
             if t.attrs.get("http-equiv", "").lower() == "content-security-policy":
-                return t.attrs.get("content", "")
-    else:
+                return t.attrs.get("content", "").lower()
+    else:  # pragma: no cover
         print("No Content-Security-Policy header, and beautifulsoup4 is not installed to inspect HTML")
 
     return None
@@ -39,7 +39,7 @@ def check_csp_should_exist(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
     return result(
-        csp != None,
+        csp != None and csp != "",
         f"Content-Security-Policy header should exist ({_trunc(csp)})",
         "csp",
         **kwargs,
@@ -122,14 +122,11 @@ def check_csp_must_not_include_reporturi(responses, **kwargs):
 
 
 # Check: Content-Security-Policy header should not include report-to
-def check_csp_should_include_reportto(responses, **kwargs):
+def check_csp_should_not_include_reportto(responses, **kwargs):
     csp = extract_csp(responses["response"])
 
-    if not csp:
-        csp = ""
-
     return result(
-        ("report-to" not in csp),
+        csp is None or "report-to" not in csp,
         f"Content-Security-Policy header should not include report-to ({_trunc(csp)})",
         "csp_report_to",
         warn_on_fail=True,

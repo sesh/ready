@@ -9,7 +9,7 @@ USE_BS4 = True
 
 try:
     from bs4 import BeautifulSoup
-except ImportError:
+except ImportError:  # pragma: no cover
     USE_BS4 = False
 
 
@@ -150,7 +150,6 @@ def check_html_should_not_use_unnecessary_entities(responses, **kwargs):
         warn_on_fail=True,
         **kwargs,
     )
-    print(entities)
 
 
 # Check: All script tags should use subresource integrity
@@ -220,9 +219,10 @@ def check_rss_should_return_cors_header(responses, **kwargs):
 
         cors_values = []
         for url in feed_urls:
-            if url.startswith("//"):
+            # TODO: with the urljoin above this block probably isn't needed
+            if url.startswith("//"):  # pragma: no cover
                 url = "https:" + url
-            elif url.startswith("/"):
+            elif url.startswith("/"):  # pragma: no cover
                 url = responses["response"].url.rstrip("/") + url
 
             if url.startswith("http"):
@@ -235,7 +235,7 @@ def check_rss_should_return_cors_header(responses, **kwargs):
             "feeds_cors_enabled",
             **kwargs,
         )
-    else:
+    else:  # pragma: no cover
         return result(
             False,
             f"RSS and JSON feeds should return Access-Control-Allow-Origin header (skipped because beautifulsoup is missing)",
@@ -254,16 +254,13 @@ def check_html_should_not_be_cached_for_more_than_24_hours(responses, **kwargs):
         max_age = re.search(r"max-age=(?P<age>\d+)", cc_header)
 
         if max_age:
-            try:
-                age = int(max_age.group("age"))
-                return result(
-                    age <= 86400,
-                    f"Cache-Control max-age should be <= 86400 for HTML documents ({cc_header})",
-                    "html_cache_duration",
-                    **kwargs,
-                )
-            except ValueError:
-                error = f"parse error: {cc_header}"
+            age = int(max_age.group("age"))
+            return result(
+                age <= 86400,
+                f"Cache-Control max-age should be <= 86400 for HTML documents ({cc_header})",
+                "html_cache_duration",
+                **kwargs,
+            )
         else:
             error = f"match error: {cc_header}"
 

@@ -1,15 +1,21 @@
+import os
 from unittest import TestCase, skipIf
 
 from ready.ready import ready
 
-SKIP_READY_CHECKS = False
 try:
     import bs4
     import tld
     import cryptography
+
+    SKIP_READY_CHECKS = os.environ.get("READY_SKIP_E2E", "") == "1"
 except ImportError as e:
     print(e)
     SKIP_READY_CHECKS = True
+
+
+if SKIP_READY_CHECKS:
+    print("Skipping end to end tests")
 
 
 @skipIf(SKIP_READY_CHECKS, "Skipping because not all dependencies are available")

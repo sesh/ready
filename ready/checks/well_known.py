@@ -5,7 +5,7 @@ import datetime
 def get_utc_time():
     try:
         return datetime.datetime.now(datetime.UTC)
-    except Exception as e:
+    except Exception as e:  # pragma: no cover
         # python <= 3.10
         print(e)
         return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
@@ -77,7 +77,9 @@ def check_security_txt_not_expired(responses, **kwargs):
 def check_favicon_is_served(responses, **kwargs):
     favicon_response = responses["favicon_response"]
     return result(
-        favicon_response.status == 200 and favicon_response.headers.get("content-type", "").startswith("image/"),
+        favicon_response
+        and favicon_response.status == 200
+        and favicon_response.headers.get("content-type", "").startswith("image/"),
         "Favicon is served at /favicon.ico",
         "wellknown_favicon",
         **kwargs,

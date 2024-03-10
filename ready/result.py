@@ -28,7 +28,7 @@ def result(
     elif not passed:
         pre = f"[{YELLOW}WARN{NC}]"
 
-    if print_output:
+    if print_output:  # pragma: no cover
         print(f"{pre} {message}")
 
     return ReadyResult(passed, message, check, warn_on_fail, domain=kwargs.get("domain"))
