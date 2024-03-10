@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skipIf
 from unittest.mock import patch
 from ready.checks.html import (
     check_permissions_policy_should_exist,
@@ -21,6 +21,12 @@ from ready.checks.html import (
 )
 
 from ready.thttp import Response
+
+SKIP_BS4_TESTS = False
+try:
+    import bs4
+except ImportError:
+    SKIP_BS4_TESTS = True
 
 
 class HtmlChecksTestCase(TestCase):
@@ -242,6 +248,7 @@ class HtmlChecksTestCase(TestCase):
         result = check_html_should_not_be_cached_for_more_than_24_hours({"response": r}, print_output=False)
         self.assertFalse(result.passed)
 
+    @skipIf(SKIP_BS4_TESTS, "beautifulsoup is not available")
     def test_check_rss_should_return_cors_header(self):
         mock_response = Response(None, b"", None, 200, None, {"access-control-allow-origin": "*"}, None)
         with patch("ready.checks.html.thttp.request", return_value=mock_response):

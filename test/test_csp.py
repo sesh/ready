@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skipIf
 
 from ready.checks.csp import (
     extract_csp,
@@ -14,6 +14,12 @@ from ready.checks.csp import (
     check_csp_should_only_include_valid_directives,
 )
 from ready.thttp import Response
+
+SKIP_BS4_TESTS = False
+try:
+    import bs4
+except ImportError:
+    SKIP_BS4_TESTS = True
 
 
 response_with_html_csp = Response(
@@ -36,6 +42,7 @@ def response_with_csp(csp):
 
 
 class ExtractContentSecurityPolicyTestCase(TestCase):
+    @skipIf(SKIP_BS4_TESTS, "beautifulsoup is not available")
     def test_extract_csp_meta_tag(self):
         from bs4 import BeautifulSoup
 
