@@ -22,6 +22,10 @@ class LookupFailed(Exception):
 
 
 def connect_with_specific_protocol(domain, protocol, ipv6=False):
+    successful = False
+
+    ssl_sock = None
+
     try:
         sock_type = socket.AF_INET6 if ipv6 else socket.AF_INET
         sock = socket.socket(sock_type, socket.SOCK_STREAM)
@@ -31,9 +35,12 @@ def connect_with_specific_protocol(domain, protocol, ipv6=False):
         ssl_sock.settimeout(CONNECTION_TIMEOUT)
         ssl_sock.connect((domain, 443))
         ssl_sock.close()
-        return True
+        successful = True
     except:
-        return False
+        successful = False
+    finally:
+        if ssl_sock:
+            ssl_sock.close()
 
 
 def get_ssl_expiry(domain, ipv6=False):
@@ -67,6 +74,7 @@ def get_ssl_certificate(domain, ipv6=False, binary=False):
         ssl_sock.connect((domain, 443))
 
         cert = ssl_sock.getpeercert(binary_form=binary)
+        ssl_sock.close()
         return cert
     except:
         return None
