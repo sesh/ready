@@ -158,7 +158,7 @@ def check_html_script_tags_use_sri(responses, **kwargs):
     script_tags = re.findall(r"<script ([^\>]+)", responses["response"].content.decode())
 
     return result(
-        all([b"integrity" in tag for tag in script_tags]),
+        all(["integrity" in tag for tag in script_tags]),
         f"All script tags should use subresource integrity",
         "html_sri_js",
         **kwargs,
