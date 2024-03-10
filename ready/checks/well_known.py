@@ -1,5 +1,14 @@
 from ready.result import result
-from datetime import datetime, timezone
+import datetime
+
+
+def get_utc_time():
+    try:
+        return datetime.datetime.now(datetime.UTC)
+    except Exception as e:
+        # python <= 3.10
+        print(e)
+        return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
 
 # Check: Robots.txt exists and is a text file
@@ -40,16 +49,20 @@ def check_security_txt_not_expired(responses, **kwargs):
         if line.strip().startswith("Expires:"):
             date = line.replace("Expires:", "").strip()
 
+            if date.endswith("Z"):
+                # required for 3.9 / 3.10 support, fromisoformat was updated in 3.11 to support a wider range of values
+                date = date.replace("Z", "+00:00")
             try:
-                dt = datetime.fromisoformat(date.upper())
+                dt = datetime.datetime.fromisoformat(date.upper())
 
                 return result(
-                    dt > datetime.utcnow().replace(tzinfo=timezone.utc),
+                    dt > get_utc_time(),
                     f"Security.txt has an expiry date in the future ({dt})",
                     "wellknown_security_not_expired",
                     **kwargs,
                 )
-            except:
+            except Exception as e:
+                print(e)
                 break
 
     return result(

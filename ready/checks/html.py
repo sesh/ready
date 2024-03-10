@@ -113,11 +113,11 @@ def check_html_includes_title(responses, **kwargs):
 
 # Check: HTML should include link with rel="icon"
 def check_html_includes_rel_icon(responses, **kwargs):
-    link_re = re.compile(b"<link (.+)>")
-    links = [l.replace(b"'", b'"') for l in link_re.findall(responses["response"].content)]
+    link_re = re.compile(r"<link (.+)>")
+    links = [l.replace("'", '"') for l in link_re.findall(responses["response"].content.decode())]
 
     return result(
-        any([b'rel="icon"' in link for link in links]) or any([b'rel="shortcut icon"' in link for link in links]),
+        any(['rel="icon"' in link for link in links]) or any(['rel="shortcut icon"' in link for link in links]),
         'HTML should include link with rel="icon"',
         "html_rel_icon",
         **kwargs,
@@ -140,12 +140,12 @@ def check_html_should_not_use_unnecessary_entities(responses, **kwargs):
 
     # The longest entity on the registered entity list is "CounterClockwiseContourIntegral"
     # https://html.spec.whatwg.org/entities.json
-    entities = re.findall(b"&([\w#]{1,32});", responses["response"].content)
+    entities = re.findall(r"&([\w#]{1,32});", responses["response"].content.decode())
     entities = [e for e in entities if e not in allow_list]
 
     return result(
         len(entities) == 0,
-        f"HTML should not use unnecessary HTML entities ({[e.decode() for e in set(entities)]})",
+        f"HTML should not use unnecessary HTML entities ({[e for e in set(entities)]})",
         "html_unnecessary_entities",
         warn_on_fail=True,
         **kwargs,
@@ -155,10 +155,10 @@ def check_html_should_not_use_unnecessary_entities(responses, **kwargs):
 
 # Check: All script tags should use subresource integrity
 def check_html_script_tags_use_sri(responses, **kwargs):
-    script_tags = re.findall(b"<script ([^\>]+)", responses["response"].content)
+    script_tags = re.findall(r"<script ([^\>]+)", responses["response"].content.decode())
 
     return result(
-        all([b"integrity" in tag for tag in script_tags]),
+        all(["integrity" in tag for tag in script_tags]),
         f"All script tags should use subresource integrity",
         "html_sri_js",
         **kwargs,
@@ -190,11 +190,11 @@ def check_cdns_should_not_be_used(responses, **kwargs):
         "ajax.aspnetcdn.com",
     ]
 
-    script_tags = re.findall(b"<script ([^\>]+)", responses["response"].content)
-    link_tags = re.findall(b"<link (.+)>", responses["response"].content)
+    script_tags = re.findall(r"<script ([^\>]+)", responses["response"].content.decode())
+    link_tags = re.findall(r"<link (.+)>", responses["response"].content.decode())
 
     for tag in script_tags + link_tags:
-        if any([x in tag.decode() for x in cdn_domains]):
+        if any([x in tag for x in cdn_domains]):
             return result(False, "CDNs should not be used for Javascript or CSS assets", "html_cdn_usage", **kwargs)
 
     return result(True, "CDNs should not be used for Javascript or CSS assets", "html_cdn_usage", **kwargs)
@@ -251,7 +251,7 @@ def check_html_should_not_be_cached_for_more_than_24_hours(responses, **kwargs):
     error = "no Cache-Control header"
 
     if "max-age=" in cc_header:
-        max_age = re.search("max-age=(?P<age>\d+)", cc_header)
+        max_age = re.search(r"max-age=(?P<age>\d+)", cc_header)
 
         if max_age:
             try:
