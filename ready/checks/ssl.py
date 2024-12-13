@@ -259,14 +259,23 @@ def check_ssl_certificate_should_provide_ocsp_must_staple(responses, **kwargs):
     loaded = x509.load_der_x509_certificate(certificate)
 
     has_must_staple_extension = False
-    for extension in loaded.extensions:
-        # see https://github.com/sesh/ready/issues/15 for details
-        if extension.oid.dotted_string == "1.3.6.1.5.5.7.1.24":
-            has_must_staple_extension = True
+    msg = "missing extension"
+
+    lifetime_days = (loaded.not_valid_after - loaded.not_valid_before).days
+    if lifetime_days < 10:
+        has_must_staple_exension = True
+        msg = "certificate is short-lived; missing extension"
+
+    else:
+        for extension in loaded.extensions:
+            # see https://github.com/sesh/ready/issues/15 for details
+            if extension.oid.dotted_string == "1.3.6.1.5.5.7.1.24":
+                has_must_staple_extension = True
+                msg = "includes extension"
 
     return result(
         has_must_staple_extension,
-        f"SSL certificate should provide OCSP must-staple ({'missing' if not has_must_staple_extension else 'includes'} extension)",
+        f"Long-lived SSL certificate should provide OCSP must-staple ({msg})",
         "ssl_ocsp_must_staple",
         warn_on_fail=True,
         **kwargs,
