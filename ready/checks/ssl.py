@@ -100,8 +100,8 @@ def check_ssl_expiry_should_be_less_than_one_year(responses, **kwargs):
     ssl_expiry_days = (ssl_expiry - date.today()).days if ssl_expiry else None
 
     return result(
-        ssl_expiry_days and ssl_expiry_days < 366,
-        f"SSL expiry should be less than one year ({ssl_expiry_days} days)",
+        ssl_expiry_days and ssl_expiry_days < 398,
+        f"SSL expiry should be less than 398 days ({ssl_expiry_days} days)",
         "ssl_expiry_max",
         **kwargs,
     )
