@@ -7,7 +7,7 @@ import urllib
 from importlib import resources
 from . import checks as checks_module
 
-VERSION = "1.5.0"
+VERSION = "1.6.1"
 
 from ready.checks.bad_response import (
     check_bad_response_cloudflare,
