@@ -91,8 +91,6 @@ from ready.checks.ssl import (
     check_ssl_connection_fails_with_tls_1_1,
     check_ssl_expiry_should_be_greater_than_five_days,
     check_ssl_expiry_should_be_less_than_one_year,
-    check_ssl_certificate_must_include_ocsp_uri,
-    check_ssl_certificate_should_provide_ocsp_must_staple,
 )
 from ready.checks.status import check_http_response_should_be_200
 from ready.checks.swagger import check_swagger_should_not_return_200
@@ -303,8 +301,6 @@ def ready(
             check_ssl_certificate_should_be_trusted,
             check_ssl_connection_fails_with_tls_1_1,
             check_ssl_connection_fails_with_tls_1_0,
-            check_ssl_certificate_must_include_ocsp_uri,
-            check_ssl_certificate_should_provide_ocsp_must_staple,
             check_dns_caa_record_should_exist,
             check_dns_caa_record_should_include_accounturi,
             check_dns_caa_record_should_include_validationmethods,
