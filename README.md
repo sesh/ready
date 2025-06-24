@@ -9,7 +9,7 @@ The simplest way to quickly check your site is with `uvx`:
 uvx --from ready-check ready <domain>
 ```
 
-Alternative, install the tool from PyPI with:
+Alternatively, install the tool from PyPI with:
 
 ```
 pip install ready-check
