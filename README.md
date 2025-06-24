@@ -3,7 +3,13 @@
 
 ## Usage
 
-Install the tool from PyPI with:
+The simplest way to quickly check your site is with `uvx`:
+
+```
+uvx --from ready-check ready <domain>
+```
+
+Alternative, install the tool from PyPI with:
 
 ```
 pip install ready-check
@@ -108,8 +114,6 @@ Note: if you install from PyPI these dependencies are installed.
 - DNS CAA should be enabled
 - DNS CAA should include accounturi
 - DNS CAA should include validationmethods
-- SSL certificate must provide OCSP URI
-- SSL certificate should provide OCSP must-staple
 - Response should be a 200 (after redirects)
 
 
